@@ -1,0 +1,4 @@
+fname, lname, age
+john, smith, 30
+jane, doe, 30
+jack, black, 25
