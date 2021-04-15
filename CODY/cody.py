@@ -21,7 +21,7 @@ class Cody(Frame):
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         self.pack(fill=BOTH, expand=True)
         self.rowconfigure(5, pad=7)
-        self.rowconfigure(3, weight=1)
+        self.rowconfigure(6, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
         
@@ -47,9 +47,11 @@ ___Sure, but the transparency is important. Directly profiting from slave trade 
 ___Broadly, I don't think you should celebrate someone as a great philanthropist if their money is ill-gotten. I think the directness of the slave trade makes it a bit different. There is no ambiguity that it is atrocious and the people knew what they were doing even if they didn't acknowledge it as evil. There are a lot of ways to get wealthy that aren't so directly exploitative and cruel. That said.. By and large, I don't think it's a good trade to let people who get wealthy exploiting others buy their names back with a pittance of philanthropic activity. You'd have to give me a more specific example before I make a more specific argument. Local hotel chain owner who tries to give back to their community? Sure. Bezos who builds wealth by exploiting horrible warehouse conditions? His labor practices will be front and center over any small philanthropy until they're reformed. Ford who had a pretty socialist view of his labor force, tried to do some good with his wealth, and was also a rabid anti-semite. We get into separability and eclipsing issues.\n \
 ___I think the rubric still fits. And also captures how celebrating them is becoming more questionable. Washington and Jefferson are celebrated for the founding of the country. This is often seen as separable from the issues of their slave ownership. You can celebrate one while condemning the other. The founding of what's now the most powerful country in the world is thought of as a massive thing. Their ownership and profiting off of hundreds of slaves is terrible, but it's hard to say it eclipses forming the country. Where it gets dicey is when you question if these things really are separable. There are controversial takes that the country was founded primarily to benefit these big land holders financially. And Washington and Jefferson made their financial wealth by forcing slaves to labor and stealing the products of that labor. It's also worth questioning if slavery would have ended earlier in America if we hadn't revolted and formed a country with a massive economic dependence on it. And further, the founding and early years of the country very much have slavery as an issue front and center. So aught we celebrate people who founded a country with such an integrated horrific abuse? I understand how people are unforgiving that they achieved and maintained their wealth and influence on the backs of slaves, and made a country deeply intertwined with slavery. I can see how people view this as inseparable and possibly even eclipsing of what we celebrate them for. I especially sympathize with people who are viscerally reminded that the heroes we hold up as founding a nation with 'liberty and justice for all' saw them as sub humans who would be property for a century. Long story short, if you're asking me personally, I think celebrating their contributions is fine if we also provide context for their abuses. But I also think my opinion is less important the the opinions of communities they thought were subhuman and were abused by the country they founded.\n \
 ___The statue exist today for the people who see it today. The values it represents have to have meaning for the people seeing it today. To counter your Hitler, what if there was a man cheered by his community for driving all the jews from his city? Even the king and catholic church said this was a noble thing? Should the statue be kept because the people of his time thought he was good? The statue exists today still because we still see philanthropy as good. But we're increasingly seeing the slave trade as horrific. When I see stuff like this, I ask: 1) Is the terrible thing separable from the good thing? We can celebrate a mathematical achievement even if the mathematician turned out to be a bad person. 2) Does the terrible thing overshadow the good thing? It's hard to celebrate the math if everyone's first thought is 'that mathematician murdered all those children.' I think he fails both. His philanthropy and his slave trade are not unrelated things. He became wealthy trading slaves, and used some of that money for philanthropy. A completley horrific treatment of other human beings. They really are not separable. His slave trade far eclipses his philanthropy. He made life for people at home marginally better using *some* of the funds he gained committing completely atrocious treatment of people. People looking at the statue can't *not* see a slave trader who also did some good philanthropy.")
-        text_area.grid(row = 1, column = 0, columnspan=3, rowspan=4, pady = 10, padx = 10, sticky=N+S+E+W)
+        text_area.grid(row = 1, column = 0, columnspan=3, rowspan=6, pady = 10, padx = 10, sticky=N+S+E+W)
         
         # input fields
+        #s2 = Label(self, text = "Placeholder")
+        #s2.grid(row = 6, column = 10, padx = 5)
         sl = Label(self, text = "Sex")
         sl.grid(row = rl, column = 10, padx = 5) # 
         self.s = Entry(self)
@@ -86,7 +88,7 @@ ___The statue exist today for the people who see it today. The values it represe
         self.style.grid(row=rw2, column=30, padx = 5)
         
         abtn = Button(self, text="Next row", command=self.clear_text)
-        abtn.grid(row=5, column=10)
+        abtn.grid(row=6, column=10)
        
         
         # Import button
