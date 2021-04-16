@@ -1,7 +1,8 @@
 Backlog of work:
-1. Make desktop icon
-2. Figure out how to package and export the app
 3. figure out update the old csv, or how to get permission to overwrite old folder/file
 4. Make the entry labels bigger
 5. Apply some kind of styling
+
+Installation script:
+pyinstaller --onefile --icon=cody_icon.ico cody.py
 
