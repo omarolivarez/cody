@@ -1,6 +1,4 @@
 Backlog of work:
-1. Ability to move to next row (update starting_row, wipe out old text_area value and add new value)
-2. Update progress bar for next row
 3. add a new folder "Updated" and put the new csv there, or, update the old csv
 4. Make the entry labels bigger
 5. Apply some kind of styling
