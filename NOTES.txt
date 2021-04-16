@@ -1,4 +1,5 @@
 Backlog of work:
+0. Display waning on screen when entry criteria not met
 1. Make desktop icon
 2. Figure out how to package and export the app
 3. add a new folder "Updated" and put the new csv there, or, update the old csv
