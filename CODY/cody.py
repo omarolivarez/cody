@@ -23,14 +23,17 @@ class Cody(Frame):
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         self.pack(fill=BOTH, expand=True)
         self.rowconfigure(5, pad=7)
-        self.rowconfigure(7, weight=1)
+        self.rowconfigure(16, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
         
         #lbl = Label(self, text="Windows")
         #lbl.grid(sticky=W, pady=4, padx=5)
-        select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=30)
-        select_btn.grid(sticky=E, pady=8, padx=15, columnspan = 1, rowspan=1) #
+        select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=25)
+        select_btn.grid(sticky=E, pady=8, padx=15, columnspan = 1, rowspan=1) 
+        
+        save_btn = Button(self, text="Save file", command = self.save, width=25)
+        save_btn.grid(row=0, column=20, pady = 5, padx = 5, sticky=E)
         
         # white text area
         #area = Text(self)
@@ -39,54 +42,53 @@ class Cody(Frame):
                                       width = 40, padx = 2, height = 10, # padx here is applied internally as a buffer within the text area
                                       font = ("Times New Roman", 13))
         #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=3, rowspan=7, pady = 10, padx = 15, sticky=N+S+E+W)
+        self.text_area.grid(row = 1, column = 0, columnspan=3, rowspan=16, pady = 10, padx = 15, sticky=N+S+E+W)
         
         # input fields
         #s2 = Label(self, text = "Placeholder")
         #s2.grid(row = 6, column = 10, padx = 5)
-        sl = Label(self, text = "Sex", height = 2)
-        sl.grid(row = rl, column = 10, padx = 5) # 
+        sl = Label(self, text = "Sex")
+        sl.grid(row = rl, column = 20, padx = 8,sticky=W) # 
         self.s = Entry(self)
-        self.s.grid(row=rw, column=10, padx = 5)
+        self.s.grid(row=rw, column=20, padx = 5, sticky=N+W)
         
         race_l = Label(self, text = "Race")
-        race_l.grid(row = rl, column = 20, padx = 5)
+        race_l.grid(row = 3, column = 20, padx = 8, sticky=W)
         self.race = Entry(self)
-        self.race.grid(row=rw, column=20, padx = 5)
+        self.race.grid(row=4, column=20, padx = 5, sticky=N+W)
         
         age_l = Label(self, text = "Age")
-        age_l.grid(row = rl, column = 30, padx = 5)
+        age_l.grid(row = 5, column = 20, padx = 8, sticky=W)
         self.age = Entry(self)
-        self.age.grid(row=rw, column=30, padx = 5)
+        self.age.grid(row=6, column=20, padx = 5, sticky=N+W)
         
         region_l = Label(self, text = "Region of Origin")
-        region_l.grid(row = rl, column = 40, padx = 5)
+        region_l.grid(row = 7, column = 20, padx = 8, sticky=W)
         self.region = Entry(self)
-        self.region.grid(row=rw, column=40, padx = 5)
+        self.region.grid(row=8, column=20, padx = 5, sticky=N+W)
         
         blm_l = Label(self, text = "BLM Reference")
-        blm_l.grid(row = rl2, column = 10, padx = 5)
+        blm_l.grid(row = 9, column = 20, padx = 8, sticky=W)
         self.blm = Entry(self)
-        self.blm.grid(row=rw2, column=10, padx = 5)
+        self.blm.grid(row=10, column=20, padx = 5, sticky=N+W)
         
         viewpoint_l = Label(self, text = "Viewpoint")
-        viewpoint_l.grid(row = rl2, column = 20, padx = 5)
+        viewpoint_l.grid(row = 11, column = 20, padx = 8, sticky=W)
         self.viewpoint = Entry(self)
-        self.viewpoint.grid(row=rw2, column=20, padx = 5)
+        self.viewpoint.grid(row=12, column=20, padx = 5, sticky=N+W)
         
         style_l = Label(self, text = "Language Style", height = 2)
-        style_l.grid(row = rl2, column = 30, padx = 5)
+        style_l.grid(row = 13, column = 20, padx = 8, sticky=W)
         self.style = Entry(self)
-        self.style.grid(row=rw2, column=30, padx = 5, sticky=N)
+        self.style.grid(row=14, column=20, padx = 5, sticky=N+W)
         
         next_btn = Button(self, text="Next row", command=self.next_row, width=16)
-        next_btn.grid(row=5, column=10, pady = 20, padx = 5, sticky=W)
+        next_btn.grid(row=15, column=20, pady = 20, padx = 5, sticky=N+W)
         
         self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
-        self.progress.grid(row=8, column = 0, columnspan=3, pady = 3, padx = 15, sticky=N+S+E+W)
+        self.progress.grid(row=17, column = 0, columnspan=3, pady = 3, padx = 15, sticky=N+S+E+W)
         
-        save_btn = Button(self, text="Save file", command = self.save, width=20)
-        save_btn.grid(row=8, column=40, pady = 5, padx = 5, sticky=E)
+        
        
         
         # Import button
@@ -152,6 +154,21 @@ class Cody(Frame):
             self.blm.delete(0, END)
             self.viewpoint.delete(0, END)
             self.style.delete(0, END)
+            
+            # adjust text_area
+            self.text_area.delete("1.0", "end")
+            new_row = self.starting_row + 1
+            self.setStartingRow(new_row)
+            if self.starting_row <= len(self.df):
+                comment = self.df.iloc[self.starting_row]['User Comment']
+                comment = comment.replace("___", "\n\n")
+                self.text_area.insert(INSERT, comment)  
+                self.progress['value'] = (self.starting_row / len(self.df)) * 100
+                self.update_idletasks()
+            else:
+                self.progress['value'] = (self.starting_row / len(self.df)) * 100
+                self.update_idletasks()
+                self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ")
         
         
     def save(self):
@@ -181,7 +198,7 @@ def main():
     # Create window object
     root = Tk()
     root.title("Cody")
-    root.geometry('1300x750') # width x height
+    root.geometry('1200x700') # width x height
     app = Cody()
     root.mainloop()
 
