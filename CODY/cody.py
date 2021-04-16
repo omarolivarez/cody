@@ -2,7 +2,7 @@ import tkinter
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 import pandas as pd
-from tkinter.ttk import Frame, Button, Style
+from tkinter.ttk import Frame, Button, Style, Progressbar
 from tkinter import scrolledtext
 
 class Cody(Frame):
@@ -10,6 +10,8 @@ class Cody(Frame):
         super().__init__()
         self.initUI()
         self.path = ""
+        self.starting_row = 0
+        self.df = 0
         
     def initUI(self):
         rl = 1
@@ -21,23 +23,23 @@ class Cody(Frame):
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         self.pack(fill=BOTH, expand=True)
         self.rowconfigure(5, pad=7)
-        self.rowconfigure(6, weight=1)
+        self.rowconfigure(7, weight=1)
         self.columnconfigure(1, weight=1)
         self.columnconfigure(3, pad=7)
         
         #lbl = Label(self, text="Windows")
         #lbl.grid(sticky=W, pady=4, padx=5)
         select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=30)
-        select_btn.grid(sticky=E, pady=12, padx=5, columnspan = 10, rowspan=1) #
+        select_btn.grid(sticky=E, pady=8, padx=15, columnspan = 1, rowspan=1) #
         
         # white text area
         #area = Text(self)
         #area.grid(row=1, column=0, columnspan=3, rowspan=4, padx=5, sticky=N+S+E+W) 
         self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, 
-                                      width = 40, padx = 2, height = 10, 
-                                      font = ("Times New Roman", 12))
+                                      width = 40, padx = 2, height = 10, # padx here is applied internally as a buffer within the text area
+                                      font = ("Times New Roman", 13))
         #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=3, rowspan=6, pady = 10, padx = 10, sticky=N+S+E+W)
+        self.text_area.grid(row = 1, column = 0, columnspan=3, rowspan=7, pady = 10, padx = 15, sticky=N+S+E+W)
         
         # input fields
         #s2 = Label(self, text = "Placeholder")
@@ -77,8 +79,14 @@ class Cody(Frame):
         self.style = Entry(self)
         self.style.grid(row=rw2, column=30, padx = 5, sticky=N)
         
-        abtn = Button(self, text="Next row", command=self.clear_text)
-        abtn.grid(row=5, column=10, pady = 20, padx = 5, sticky=W)
+        next_btn = Button(self, text="Next row", command=self.next_row, width=16)
+        next_btn.grid(row=5, column=10, pady = 20, padx = 5, sticky=W)
+        
+        self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
+        self.progress.grid(row=8, column = 0, columnspan=3, pady = 3, padx = 15, sticky=N+S+E+W)
+        
+        save_btn = Button(self, text="Save file", command = self.save, width=20)
+        save_btn.grid(row=8, column=40, pady = 5, padx = 5, sticky=E)
        
         
         # Import button
@@ -100,42 +108,80 @@ class Cody(Frame):
         csv_file_path = askopenfilename()
         #print(csv_file_path)
         self.setPath(csv_file_path)# .set(csv_file_path)
-        
-        df = pd.read_csv(self.getPath())
-        print(df['Sex'])
-        print('here')
-        starting_row = pd.isnull(df).any(1).nonzero()[0][0]
-        print(starting_row)
-        print(len(df))
+        d = pd.read_csv(self.getPath())
+        self.setDataframe(d)
+        #df = pd.read_csv(self.getPath())
+        self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
+        #starting_row = pd.isnull(df).any(1).nonzero()[0][0]
+        #print(starting_row)
+        #print(len(df))
         #starting_row = df["Sex"].last_valid_index() + 1
         
-        if starting_row < len(df):
-            self.text_area.insert(INSERT, df.iloc[starting_row]['User Comment'])  
+        if self.starting_row < len(self.df):
+            comment = self.df.iloc[self.starting_row]['User Comment']
+            comment = comment.replace("___", "\n\n")
+            self.text_area.insert(INSERT, comment)  
+            self.progress['value'] = (self.starting_row / len(self.df)) * 100
+            self.update_idletasks()
         else:
             self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         
+    def next_row(self):
+        if len(self.s.get())==0 or len(self.race.get())==0 or len(self.age.get())==0 or len(self.region.get())==0 or len(self.blm.get())==0 or len(self.viewpoint.get())==0 or len(self.style.get())==0:
+            print("Oh, you left something empty!")
+        else:
+            # setting sex
+            self.df.iat[self.starting_row,1] = int(self.s.get())
+            # setting race
+            self.df.iat[self.starting_row,2] = int(self.race.get())
+            # setting age
+            self.df.iat[self.starting_row,3] = int(self.age.get())
+            # setting region
+            self.df.iat[self.starting_row,4] = int(self.region.get())
+            # setting blm reference
+            self.df.iat[self.starting_row,5] = int(self.blm.get())
+            # setting viewpoint
+            self.df.iat[self.starting_row,6] = int(self.viewpoint.get())
+            # setting style
+            self.df.iat[self.starting_row,7] = int(self.style.get())
+            
+            self.s.delete(0, END)
+            self.race.delete(0, END)
+            self.age.delete(0, END)
+            self.region.delete(0, END)
+            self.blm.delete(0, END)
+            self.viewpoint.delete(0, END)
+            self.style.delete(0, END)
         
-    def clear_text(self):
-        self.s.delete(0, END)
-        self.race.delete(0, END)
-        self.age.delete(0, END)
-        self.region.delete(0, END)
-        self.blm.delete(0, END)
-        self.viewpoint.delete(0, END)
-        self.style.delete(0, END)
+        
+    def save(self):
+        #save_path = self.getPath() + "/updated/"
+        self.df.to_csv(r'updated.csv', index = False)
         
     def setPath(self, p):
         self.path = p
         
     def getPath(self):
         return self.path
+    
+    def setStartingRow(self, row):
+        self.starting_row = row
+        
+    def getStartingRow(self):
+        return self.starting_row
+    
+    def setDataframe(self, dataframe):
+        self.df = dataframe
+        
+    def getDataframe(self):
+        return self.df
 
 def main():
     global v
     # Create window object
     root = Tk()
     root.title("Cody")
-    root.geometry('1250x750') # width x height
+    root.geometry('1300x750') # width x height
     app = Cody()
     root.mainloop()
 
