@@ -14,92 +14,90 @@ class Cody(Frame):
         self.starting_row = 0
         self.df = 0
         
-    def initUI(self):
-        rl = 1
-        rw = 2
-        rl2 = 3
-        rw2 = 4
-        
-        
+    def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         self.pack(fill=BOTH, expand=True)
         self.rowconfigure(5, pad=7)
-        self.rowconfigure(16, weight=1)
+        self.rowconfigure(17, weight=1)
         self.columnconfigure(3, weight=1)
         self.columnconfigure(3, pad=7)
         
-        select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
-        select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
+        menubar = Menu(self.master)
+        self.master.config(menu=menubar)
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="Import csv", command=self.import_csv_data)
+        filemenu.add_separator()
+        filemenu.add_command(label="Save", command=self.save)
+        menubar.add_cascade(label="File", menu=filemenu)
         
-        save_btn = Button(self, text="Save file", command = self.save, width=18)
-        save_btn.grid(row=0, column=20, pady = 5, padx = 5)
+        """viewpmenu = Menu(menubar, tearoff=0)
+        viewpmenu.add_command(label="Font size", command=self.popup_bonus)
+        #helpmenu.add_command(label="About...", command=self.donothing)
+        menubar.add_cascade(label="View", menu=viewpmenu)"""
         
-        #ref_btn = Button(self, text="Refresh",command=self.refresh, width=15)
-        #ref_btn.grid(row=0, column=2, sticky=W, pady=8, padx=5) 
+        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
+        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
+        #save_btn = Button(self, text="Save file", command = self.save, width=18)
+        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
         
         # font size selection widget
-        
         font_l = Label(self, text = "Font")
-        font_l.grid(row = 0, column = 1, padx = 0,sticky=W)
+        font_l.grid(row = 1, column = 20, padx = (5, 15),sticky=E)
         
-        FONT_OPTS= ["11", "12", "14", "16", "18"]
+        FONT_OPTS= ["11", "12", "13", "14", "16", "18"]
         self.font_var = StringVar(self)
-        self.font_var.set(FONT_OPTS[1]) # default value
+        self.font_var.set(FONT_OPTS[2]) # default value
         dropdown = OptionMenu(self, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
-        dropdown.grid(row = 0, column=2, sticky=W, pady=8, padx=0) 
-        #font_var.trace("w", self.callback)
-        
-        #fon_l = Label(self, text = "Placeholder")
-        #fon_l.grid(row = 0, column = 3, padx = 0,sticky=W)
+        dropdown.grid(row = 2, column=20, sticky=E, padx=(5, 15)) 
         
         self.myFont = font.Font(family="Times New Roman", size=int(self.font_var.get()))
         self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
         # padx here is a internal buffer
         
         #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=16, pady = 10, padx = 15, sticky=N+S+E+W)
+        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
         
         # input fields
         sl = Label(self, text = "Sex")
-        sl.grid(row = rl, column = 20, padx = 8,sticky=W, pady=(20, 0)) # 
+        sl.grid(row = 3, column = 20, padx = 8,sticky=W, pady=(30, 0)) # 
         self.s = Entry(self)
-        self.s.grid(row=rw, column=20, padx = (5, 15), sticky=N+W, pady=(0, 15))
+        self.s.grid(row=4, column=20, padx = (5, 15), sticky=N+W, pady=(0, 15))
         
         race_l = Label(self, text = "Race")
-        race_l.grid(row = 3, column = 20, padx = 8, sticky=W)
+        race_l.grid(row = 5, column = 20, padx = 8, sticky=W)
         self.race = Entry(self)
-        self.race.grid(row=4, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.race.grid(row=6, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         age_l = Label(self, text = "Age")
-        age_l.grid(row = 5, column = 20, padx = 8, sticky=W)
+        age_l.grid(row = 7, column = 20, padx = 8, sticky=W)
         self.age = Entry(self)
-        self.age.grid(row=6, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.age.grid(row=8, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         region_l = Label(self, text = "Region of Origin")
-        region_l.grid(row = 7, column = 20, padx = 8, sticky=W)
+        region_l.grid(row = 9, column = 20, padx = 8, sticky=W)
         self.region = Entry(self)
-        self.region.grid(row=8, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.region.grid(row=10, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         blm_l = Label(self, text = "BLM Reference")
-        blm_l.grid(row = 9, column = 20, padx = 8, sticky=W)
+        blm_l.grid(row = 11, column = 20, padx = 8, sticky=W)
         self.blm = Entry(self)
-        self.blm.grid(row=10, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.blm.grid(row=12, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         viewpoint_l = Label(self, text = "Viewpoint")
-        viewpoint_l.grid(row = 11, column = 20, padx = 8, sticky=W)
+        viewpoint_l.grid(row = 13, column = 20, padx = 8, sticky=W)
         self.viewpoint = Entry(self)
-        self.viewpoint.grid(row=12, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.viewpoint.grid(row=14, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         style_l = Label(self, text = "Language Style", height = 2)
-        style_l.grid(row = 13, column = 20, padx = 8, sticky=W)
+        style_l.grid(row = 15, column = 20, padx = 8, sticky=W)
         self.style = Entry(self)
-        self.style.grid(row=14, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.style.grid(row=16, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         next_btn = Button(self, text="Next row", command=self.next_row, width=11)
-        next_btn.grid(row=15, column=20, padx = 5, sticky=N+W)
+        next_btn.grid(row=17, column=20, padx = 5, sticky=N+W)
         
         self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
-        self.progress.grid(row=17, column = 0, columnspan=3, pady = 3, padx = 15, sticky=N+S+E+W)
+        self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
         
         # Import button
         #import_label = Label(self, text = "Import Data", font = ('bold', 14), pady = 20, padx = 20)
@@ -182,6 +180,27 @@ class Cody(Frame):
         #save_path = self.getPath() + "/updated/"
         self.df.to_csv(r'updated.csv', index = False)
         
+    """def popup_bonus(self):
+        win = Toplevel()
+        win.geometry('100x150')
+        self.center(win)
+        win.wm_title("Font")
+    
+        l = Label(win, text="Input")
+        l.grid(row=0, column=0)
+    
+        b = Button(win, text="Okay", command=win.destroy)
+        b.grid(row=1, column=0)"""
+        
+    def center(toplevel):
+        toplevel.update_idletasks()
+        screen_width = toplevel.winfo_screenwidth()
+        screen_height = toplevel.winfo_screenheight()
+    
+        size = tuple(int(_) for _ in toplevel.geometry().split('+')[0].split('x'))
+        x = screen_width/2 - size[0]/2
+        y = screen_height/2 - size[1]/2
+        
     def getFont(self):
         self.myFont.configure(size=int(self.font_var.get()))
         
@@ -202,6 +221,9 @@ class Cody(Frame):
         
     def getDataframe(self):
         return self.df
+    
+    def donothing(self):
+        x = 0
 
 def main():
     global v
