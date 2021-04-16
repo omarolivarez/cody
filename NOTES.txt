@@ -1,6 +1,7 @@
 Backlog of work:
+1. Make desktop icon
+2. Figure out how to package and export the app
 3. add a new folder "Updated" and put the new csv there, or, update the old csv
 4. Make the entry labels bigger
 5. Apply some kind of styling
-6. Ability to make font bigger
 

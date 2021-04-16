@@ -1,5 +1,6 @@
 import tkinter
 from tkinter import *
+from tkinter import font
 from tkinter.filedialog import askopenfilename
 import pandas as pd
 from tkinter.ttk import Frame, Button, Style, Progressbar
@@ -24,72 +25,81 @@ class Cody(Frame):
         self.pack(fill=BOTH, expand=True)
         self.rowconfigure(5, pad=7)
         self.rowconfigure(16, weight=1)
-        self.columnconfigure(1, weight=1)
+        self.columnconfigure(3, weight=1)
         self.columnconfigure(3, pad=7)
         
-        #lbl = Label(self, text="Windows")
-        #lbl.grid(sticky=W, pady=4, padx=5)
-        select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=25)
-        select_btn.grid(sticky=E, pady=8, padx=15, columnspan = 1, rowspan=1) 
+        select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
+        select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
         
-        save_btn = Button(self, text="Save file", command = self.save, width=25)
-        save_btn.grid(row=0, column=20, pady = 5, padx = 5, sticky=E)
+        save_btn = Button(self, text="Save file", command = self.save, width=18)
+        save_btn.grid(row=0, column=20, pady = 5, padx = 5)
         
-        # white text area
-        #area = Text(self)
-        #area.grid(row=1, column=0, columnspan=3, rowspan=4, padx=5, sticky=N+S+E+W) 
-        self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, 
-                                      width = 40, padx = 2, height = 10, # padx here is applied internally as a buffer within the text area
-                                      font = ("Times New Roman", 13))
+        #ref_btn = Button(self, text="Refresh",command=self.refresh, width=15)
+        #ref_btn.grid(row=0, column=2, sticky=W, pady=8, padx=5) 
+        
+        # font size selection widget
+        
+        font_l = Label(self, text = "Font")
+        font_l.grid(row = 0, column = 1, padx = 0,sticky=W)
+        
+        FONT_OPTS= ["11", "12", "14", "16", "18"]
+        self.font_var = StringVar(self)
+        self.font_var.set(FONT_OPTS[1]) # default value
+        dropdown = OptionMenu(self, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
+        dropdown.grid(row = 0, column=2, sticky=W, pady=8, padx=0) 
+        #font_var.trace("w", self.callback)
+        
+        #fon_l = Label(self, text = "Placeholder")
+        #fon_l.grid(row = 0, column = 3, padx = 0,sticky=W)
+        
+        self.myFont = font.Font(family="Times New Roman", size=int(self.font_var.get()))
+        self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
+        # padx here is a internal buffer
+        
         #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=3, rowspan=16, pady = 10, padx = 15, sticky=N+S+E+W)
+        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=16, pady = 10, padx = 15, sticky=N+S+E+W)
         
         # input fields
-        #s2 = Label(self, text = "Placeholder")
-        #s2.grid(row = 6, column = 10, padx = 5)
         sl = Label(self, text = "Sex")
-        sl.grid(row = rl, column = 20, padx = 8,sticky=W) # 
+        sl.grid(row = rl, column = 20, padx = 8,sticky=W, pady=(20, 0)) # 
         self.s = Entry(self)
-        self.s.grid(row=rw, column=20, padx = 5, sticky=N+W)
+        self.s.grid(row=rw, column=20, padx = (5, 15), sticky=N+W, pady=(0, 15))
         
         race_l = Label(self, text = "Race")
         race_l.grid(row = 3, column = 20, padx = 8, sticky=W)
         self.race = Entry(self)
-        self.race.grid(row=4, column=20, padx = 5, sticky=N+W)
+        self.race.grid(row=4, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         age_l = Label(self, text = "Age")
         age_l.grid(row = 5, column = 20, padx = 8, sticky=W)
         self.age = Entry(self)
-        self.age.grid(row=6, column=20, padx = 5, sticky=N+W)
+        self.age.grid(row=6, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         region_l = Label(self, text = "Region of Origin")
         region_l.grid(row = 7, column = 20, padx = 8, sticky=W)
         self.region = Entry(self)
-        self.region.grid(row=8, column=20, padx = 5, sticky=N+W)
+        self.region.grid(row=8, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         blm_l = Label(self, text = "BLM Reference")
         blm_l.grid(row = 9, column = 20, padx = 8, sticky=W)
         self.blm = Entry(self)
-        self.blm.grid(row=10, column=20, padx = 5, sticky=N+W)
+        self.blm.grid(row=10, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         viewpoint_l = Label(self, text = "Viewpoint")
         viewpoint_l.grid(row = 11, column = 20, padx = 8, sticky=W)
         self.viewpoint = Entry(self)
-        self.viewpoint.grid(row=12, column=20, padx = 5, sticky=N+W)
+        self.viewpoint.grid(row=12, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
         style_l = Label(self, text = "Language Style", height = 2)
         style_l.grid(row = 13, column = 20, padx = 8, sticky=W)
         self.style = Entry(self)
-        self.style.grid(row=14, column=20, padx = 5, sticky=N+W)
+        self.style.grid(row=14, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
         
-        next_btn = Button(self, text="Next row", command=self.next_row, width=16)
-        next_btn.grid(row=15, column=20, pady = 20, padx = 5, sticky=N+W)
+        next_btn = Button(self, text="Next row", command=self.next_row, width=11)
+        next_btn.grid(row=15, column=20, padx = 5, sticky=N+W)
         
         self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
         self.progress.grid(row=17, column = 0, columnspan=3, pady = 3, padx = 15, sticky=N+S+E+W)
-        
-        
-       
         
         # Import button
         #import_label = Label(self, text = "Import Data", font = ('bold', 14), pady = 20, padx = 20)
@@ -101,9 +111,6 @@ class Cody(Frame):
         # this code chunk will create a button to close the entire app
         #close_button = Button(app, text='Close',command=app.destroy)
         #close_button.grid(row=30, column=15)
-        
-        ## MAKING THE INPUT FIELDS
-        #input fields row number
         
     def import_csv_data(self):
         #global v
@@ -175,6 +182,9 @@ class Cody(Frame):
         #save_path = self.getPath() + "/updated/"
         self.df.to_csv(r'updated.csv', index = False)
         
+    def getFont(self):
+        self.myFont.configure(size=int(self.font_var.get()))
+        
     def setPath(self, p):
         self.path = p
         
@@ -198,7 +208,8 @@ def main():
     # Create window object
     root = Tk()
     root.title("Cody")
-    root.geometry('1200x700') # width x height
+    root.geometry('1250x700') # width x height
+    root.minsize("500", "550")
     app = Cody()
     root.mainloop()
 
