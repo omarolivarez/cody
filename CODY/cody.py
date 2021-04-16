@@ -1,10 +1,13 @@
 import tkinter
 from tkinter import *
 from tkinter import font
+#from tkFileDialog import *
 from tkinter.filedialog import askopenfilename
 import pandas as pd
 from tkinter.ttk import Frame, Button, Style, Progressbar
 from tkinter import scrolledtext
+import os
+import datetime
 
 class Cody(Frame):
     def __init__(self):
@@ -29,28 +32,23 @@ class Cody(Frame):
         filemenu.add_separator()
         filemenu.add_command(label="Save", command=self.save)
         menubar.add_cascade(label="File", menu=filemenu)
-        
-        """viewpmenu = Menu(menubar, tearoff=0)
-        viewpmenu.add_command(label="Font size", command=self.popup_bonus)
-        #helpmenu.add_command(label="About...", command=self.donothing)
-        menubar.add_cascade(label="View", menu=viewpmenu)"""
-        
+
         #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
         #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
         #save_btn = Button(self, text="Save file", command = self.save, width=18)
         #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
         
         # font size selection widget
-        font_l = Label(self, text = "Font")
-        font_l.grid(row = 1, column = 20, padx = (5, 15),sticky=E)
+        #font_l = Label(self, text = "Font")
+        #font_l.grid(row = 1, column = 20, padx = 1,sticky=E)
         
-        FONT_OPTS= ["11", "12", "13", "14", "16", "18"]
+        FONT_OPTS= ["Font Size","11", "12", "13", "14", "16", "18"]
         self.font_var = StringVar(self)
-        self.font_var.set(FONT_OPTS[2]) # default value
+        self.font_var.set(FONT_OPTS[0]) # default value
         dropdown = OptionMenu(self, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
-        dropdown.grid(row = 2, column=20, sticky=E, padx=(5, 15)) 
+        dropdown.grid(row = 1, column=20, sticky=E, padx=(2, 15)) 
         
-        self.myFont = font.Font(family="Times New Roman", size=int(self.font_var.get()))
+        self.myFont = font.Font(family="Times New Roman", size=13)
         self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
         # padx here is a internal buffer
         
@@ -59,43 +57,51 @@ class Cody(Frame):
         
         # input fields
         sl = Label(self, text = "Sex")
-        sl.grid(row = 3, column = 20, padx = 8,sticky=W, pady=(30, 0)) # 
+        sl.grid(row = 2, column = 19, padx = 0,sticky=E, pady=(70, 0)) 
         self.s = Entry(self)
-        self.s.grid(row=4, column=20, padx = (5, 15), sticky=N+W, pady=(0, 15))
+        self.s.grid(row=2, column=20, padx = (2, 15), sticky=W, pady=(70, 0), columnspan=2)
         
         race_l = Label(self, text = "Race")
-        race_l.grid(row = 5, column = 20, padx = 8, sticky=W)
+        race_l.grid(row = 3, column = 19, padx = 0, sticky=E, pady=(30, 0))
         self.race = Entry(self)
-        self.race.grid(row=6, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.race.grid(row=3, column=20, padx =  (2, 15), sticky=W, pady=(30, 0), columnspan=2)
         
         age_l = Label(self, text = "Age")
-        age_l.grid(row = 7, column = 20, padx = 8, sticky=W)
+        age_l.grid(row = 4, column = 19, padx = 0, sticky=E, pady=(30, 0))
         self.age = Entry(self)
-        self.age.grid(row=8, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.age.grid(row=4, column=20, padx =  (2, 15), sticky=W, pady=(30, 0), columnspan=2)
         
         region_l = Label(self, text = "Region of Origin")
-        region_l.grid(row = 9, column = 20, padx = 8, sticky=W)
+        region_l.grid(row = 5, column = 19, padx = 0, sticky=E, pady=(30, 0))
         self.region = Entry(self)
-        self.region.grid(row=10, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.region.grid(row=5, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
         
         blm_l = Label(self, text = "BLM Reference")
-        blm_l.grid(row = 11, column = 20, padx = 8, sticky=W)
+        blm_l.grid(row = 6, column = 19, padx = 0, sticky=E, pady=(30, 0))
         self.blm = Entry(self)
-        self.blm.grid(row=12, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.blm.grid(row=6, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
         
         viewpoint_l = Label(self, text = "Viewpoint")
-        viewpoint_l.grid(row = 13, column = 20, padx = 8, sticky=W)
+        viewpoint_l.grid(row = 7, column = 19, padx = 0, sticky=E, pady=(30, 0))
         self.viewpoint = Entry(self)
-        self.viewpoint.grid(row=14, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.viewpoint.grid(row=7, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
         
-        style_l = Label(self, text = "Language Style", height = 2)
-        style_l.grid(row = 15, column = 20, padx = 8, sticky=W)
+        style_l = Label(self, text = "Language Style")
+        style_l.grid(row = 8, column = 19, padx = 0, sticky=E, pady=(30, 20))
         self.style = Entry(self)
-        self.style.grid(row=16, column=20, padx =  (5, 15), sticky=N+W, pady=(0, 15))
+        self.style.grid(row=8, column=20, padx = (2, 15), sticky=W, pady=(30, 20), columnspan=2)
         
         next_btn = Button(self, text="Next row", command=self.next_row, width=11)
-        next_btn.grid(row=17, column=20, padx = 5, sticky=N+W)
+        next_btn.grid(row=9, column=20, padx = (2, 15), sticky=E)
         
+        self.labeltext_empty=StringVar()
+        self.labeltext_empty.set("")
+        self.empty_message = Label(self, justify=LEFT, textvariable=self.labeltext_empty)
+        self.empty_message.config(fg="Red")
+        self.empty_message.grid(row = 10, column = 20, 
+                                padx = (2, 15), pady = (15, 0),sticky=W)
+        #self.empty_message = Label(self, text = "",)
+
         self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
         self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
         
@@ -111,18 +117,11 @@ class Cody(Frame):
         #close_button.grid(row=30, column=15)
         
     def import_csv_data(self):
-        #global v
         csv_file_path = askopenfilename()
-        #print(csv_file_path)
         self.setPath(csv_file_path)# .set(csv_file_path)
         d = pd.read_csv(self.getPath())
         self.setDataframe(d)
-        #df = pd.read_csv(self.getPath())
         self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
-        #starting_row = pd.isnull(df).any(1).nonzero()[0][0]
-        #print(starting_row)
-        #print(len(df))
-        #starting_row = df["Sex"].last_valid_index() + 1
         
         if self.starting_row < len(self.df):
             comment = self.df.iloc[self.starting_row]['User Comment']
@@ -135,7 +134,8 @@ class Cody(Frame):
         
     def next_row(self):
         if len(self.s.get())==0 or len(self.race.get())==0 or len(self.age.get())==0 or len(self.region.get())==0 or len(self.blm.get())==0 or len(self.viewpoint.get())==0 or len(self.style.get())==0:
-            print("Oh, you left something empty!")
+            self.labeltext_empty.set("One of your entries\nwas left empty.")
+            self.master.update()
         else:
             # setting sex
             self.df.iat[self.starting_row,1] = int(self.s.get())
@@ -160,6 +160,9 @@ class Cody(Frame):
             self.viewpoint.delete(0, END)
             self.style.delete(0, END)
             
+            self.labeltext_empty.set("")
+            self.master.update()
+            
             # adjust text_area
             self.text_area.delete("1.0", "end")
             new_row = self.starting_row + 1
@@ -175,34 +178,26 @@ class Cody(Frame):
                 self.update_idletasks()
                 self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ")
         
-        
     def save(self):
         #save_path = self.getPath() + "/updated/"
-        self.df.to_csv(r'updated.csv', index = False)
-        
-    """def popup_bonus(self):
-        win = Toplevel()
-        win.geometry('100x150')
-        self.center(win)
-        win.wm_title("Font")
-    
-        l = Label(win, text="Input")
-        l.grid(row=0, column=0)
-    
-        b = Button(win, text="Okay", command=win.destroy)
-        b.grid(row=1, column=0)"""
-        
-    def center(toplevel):
-        toplevel.update_idletasks()
-        screen_width = toplevel.winfo_screenwidth()
-        screen_height = toplevel.winfo_screenheight()
-    
-        size = tuple(int(_) for _ in toplevel.geometry().split('+')[0].split('x'))
-        x = screen_width/2 - size[0]/2
-        y = screen_height/2 - size[1]/2
+        dir_name = filedialog.askdirectory() #tkFileDialog.
+        new_folder = "Updated_Coding"
+        path = os.path.join(dir_name, new_folder)
+        mode = 0o666
+        os.mkdir(path, mode)
+        today = datetime.date.today().strftime("%Y%m%d")
+        filename = "%s_%s.%s" % ("Updated_Coding", today ,"csv")
+        filename = os.path.join(path,filename)
+        print(filename)
+        self.df.to_csv(filename)
+        #self.df.to_csv(r'updated.csv', index = False)
         
     def getFont(self):
-        self.myFont.configure(size=int(self.font_var.get()))
+        font_size = self.font_var.get()
+        if font_size.isdecimal():
+            self.myFont.configure(size=int(font_size))
+        else:
+            self.myFont.configure(size=13)
         
     def setPath(self, p):
         self.path = p
@@ -221,9 +216,6 @@ class Cody(Frame):
         
     def getDataframe(self):
         return self.df
-    
-    def donothing(self):
-        x = 0
 
 def main():
     global v
