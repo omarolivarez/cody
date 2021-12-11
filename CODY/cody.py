@@ -166,10 +166,12 @@ class Cody(Frame):
             self.a = [StringVar(self.win) for i in range(len(cats_list))]
             n = 0
             for n in range(len(cats_list)): 
-                Label(self.win, text=cats_list[n]).grid(row= n+2, column=1, padx=(15, 10))
-                Strg_var = StringVar(self.win)
-                print('a[n]', self.a[n])
-                OptionMenu(self.win, self.a[n], *CATEGORY_OPTIONS).grid(row = n+2, column=2, padx=10)
+                l = Label(self.win, text=cats_list[n]).grid(row= n+2, column=1, padx=(15, 0), pady=(0, 5), sticky=E)
+                #Strg_var = StringVar(self.win) # maybe not needed
+                self.a[n].set("Variable type")
+                o = OptionMenu(self.win, self.a[n], *CATEGORY_OPTIONS)
+                o.config(width=10)
+                o.grid(row = n+2, column=2, padx=10)
 
             """
             # loop to create empty optionmenu text holders
@@ -207,7 +209,7 @@ class Cody(Frame):
                 ###self.categories_entries[i].config(state=DISABLED)
             """
             b = Button(self.win, text="Done", command=self.nextPopup)
-            b.grid(row=len(cats_list)+2, column=2, pady=(15, 5), padx=(0, 15), sticky=W)
+            b.grid(row=len(cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
 
             ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']
