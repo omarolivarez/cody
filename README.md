@@ -1,7 +1,7 @@
 # cody
 A desktop app for coding (labeling) data  
 *Screenshot of Cody*
-![Cody screenshot](images/Cody_example.png)
+![Cody screenshot](https://github.com/omarolivarez/cody/blob/dev/CODY/images/Cody_example.png)
 
 
 ## Problem it solves
