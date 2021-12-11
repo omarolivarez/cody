@@ -116,7 +116,12 @@ class Cody(Frame):
         # this code chunk will create a button to close the entire app
         #close_button = Button(app, text='Close',command=app.destroy)
         #close_button.grid(row=30, column=15)
+    
     def nextPopup(self):
+        print(list(map(lambda x: x.get(), self.a)))
+        """
+        for q in self.categories_selected:
+            print(q.get())"""
         self.win.destroy()
         return
 
@@ -157,24 +162,34 @@ class Cody(Frame):
             self.setCategoriesEntry()
             #scrollbars = [] # not needed for now
 
+            cats_list = columns_from_df[1:]
+            self.a = [StringVar(self.win) for i in range(len(cats_list))]
+            n = 0
+            for n in range(len(cats_list)): 
+                Label(self.win, text=cats_list[n]).grid(row= n+2, column=1, padx=(15, 10))
+                Strg_var = StringVar(self.win)
+                print('a[n]', self.a[n])
+                OptionMenu(self.win, self.a[n], *CATEGORY_OPTIONS).grid(row = n+2, column=2, padx=10)
+
+            """
             # loop to create empty optionmenu text holders
             for i in range(1, num_df_cols):
                 sr = StringVar(self)
                 sr.set("Variable type")
                 print(i, "first")
-                dropdown_popup = OptionMenu(self.win, sr, *CATEGORY_OPTIONS, command=lambda _: self.enableCategoryEntry(i-1))
+                dropdown_popup = OptionMenu(self.win, sr, *CATEGORY_OPTIONS) #, command=lambda _: self.enableCategoryEntry(i-1)
                 print(i, "second")
                 dropdown_popup.config(width=10)
                 dropdown_popup.grid(row=i+1, column=1, padx=10)
                 self.categories_selected.append(dropdown_popup)
-
+            
             # loop to create labels, optionmenus, and entries in pop-up window
             for i in range(1, num_df_cols): # start at 1 to avoid selecting the text column
                 # for every column except the first one, create a label and a dropdown with the same values
                 pop_up_labels.append(Label(self.win, text=columns_from_df[i]))
                 #print(i)
                 ###dropdown_list.append(OptionMenu(win, self.categories_selected[i], *CATEGORY_OPTIONS, command=lambda _: self.enableCategoryEntry(i)))
-                self.categories_entries.append(Text(self.win, height = 3, width = 40, wrap="word"))
+                ###self.categories_entries.append(Text(self.win, height = 3, width = 40, wrap="word"))
                 ## these two lines below were the add scrollbars, but are unnecessary
                 #scrollbars.append(Scrollbar(win, orient = 'vertical', command = categories_entries[i].yview))
                 #categories_entries[i]['yscrollcommand'] = scrollbars[i].set
@@ -187,12 +202,12 @@ class Cody(Frame):
                 ###dropdown_list[i].config(width=10)
                 ###dropdown_list[i].grid(row=i+2, column=1, padx=10)
                 # now add the entry boxes
-                self.categories_entries[i].grid(row=i+2, column=2, padx=(10, 15))
+                ###self.categories_entries[i].grid(row=i+2, column=2, padx=(10, 15))
                 # now disable the widget:
-                self.categories_entries[i].config(state=DISABLED)
-            
+                ###self.categories_entries[i].config(state=DISABLED)
+            """
             b = Button(self.win, text="Done", command=self.nextPopup)
-            b.grid(row=len(pop_up_labels)+2, column=2, pady=(15, 5), padx=(0, 15), sticky=W)
+            b.grid(row=len(cats_list)+2, column=2, pady=(15, 5), padx=(0, 15), sticky=W)
 
             ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']
