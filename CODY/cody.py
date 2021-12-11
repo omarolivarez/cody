@@ -136,6 +136,7 @@ class Cody(Frame):
             self.progress['value'] = (self.starting_row / len(self.df)) * 100 
             self.update_idletasks()
         else:
+            # in this case, the CSV is completed filled out
             self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         
     def next_row(self):
