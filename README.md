@@ -1,5 +1,5 @@
 # cody
-A desktop app for coding (labeling) data  
+A desktop app for coding (labeling) data. Cody is made from a Python backend, tkinter front-end, and pandas for data management.  
 *Screenshot of Cody*
 ![Cody screenshot](https://github.com/omarolivarez/cody/blob/dev/CODY/images/Cody_example.png)
 
@@ -11,6 +11,7 @@ Coding (labeling) data that consists of long-text entries can be tough. If you i
 Cody serves as a desktop UI specifically designed for people who need to code long text datasets. 
 
 ## How to get Cody running
+For right now, Cody is not downloadable as an executable. But in the meantime, you can "git clone cody" to your computer and run using "python cody.py" from the top-most "cody" folder. 
 
 ## How to use Cody
 1. Click "File > Imort CSV" in the menu options. 
