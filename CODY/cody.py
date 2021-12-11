@@ -16,6 +16,7 @@ class Cody(Frame):
         self.path = ""
         self.starting_row = 0
         self.df = 0
+
         
     def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
@@ -125,6 +126,7 @@ class Cody(Frame):
         print()
         # select the row num
         self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
+        # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax). 
         
         if self.starting_row < len(self.df):
             comment = self.df.iloc[self.starting_row]['User Comment']
