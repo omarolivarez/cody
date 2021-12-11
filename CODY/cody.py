@@ -8,6 +8,7 @@ from tkinter.ttk import Frame, Button, Style, Progressbar
 from tkinter import scrolledtext
 import os
 import datetime
+from itertools import compress # for converting true false list into shorter version
 
 class Cody(Frame):
     def __init__(self):
@@ -119,10 +120,25 @@ class Cody(Frame):
     
     def nextPopup(self):
         selected = (list(map(lambda x: x.get(), self.a)))
-        print(selected)
         true_false_list = [x=="categorical" for x in selected]
-        print(true_false_list)
+        # now get just the ones that are true
+        categorical_vars = list(compress(self.cats_list, true_false_list))
+
+        # destroy the old window
         self.win.destroy()
+
+        # create new window
+        win2 = Toplevel()
+        win2.minsize("450", "550") # width x height
+        win2.wm_title("Categories")
+
+        # add the categorical variables to the window
+        n = 0
+        popup2_start = Label(win2, text="Add your categories for each code. Separate each category with a semicolon and a space.\nEach category may include any character, including spaces and hyphens.")
+        popup2_start.grid(row=0, column=0, columnspan = 3, pady=(15, 15), padx=(15,0), sticky=W)
+
+        for n in range(len(categorical_vars)): 
+                l = Label(win2, text=categorical_vars[n]).grid(row= n+1, column=0, padx=(15, 0), pady=(0, 5), sticky=E)
         return
 
     def import_csv_data(self):
