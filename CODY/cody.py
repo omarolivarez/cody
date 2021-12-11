@@ -118,12 +118,10 @@ class Cody(Frame):
         #close_button.grid(row=30, column=15)
         
     def import_csv_data(self):
-        csv_file_path = askopenfilename()
+        csv_file_path = askopenfilename() # open the file manager to select CSV
         self.setPath(csv_file_path)# .set(csv_file_path)
-        d = pd.read_csv(self.getPath())
+        d = pd.read_csv(self.getPath()) # initialize the dataframe
         self.setDataframe(d)
-        print(pd.isnull(self.df).any(1).argmax()) # I AM HERE 
-        print()
         # select the row num
         self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
         # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax). 
