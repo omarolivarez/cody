@@ -121,13 +121,19 @@ class Cody(Frame):
         self.setPath(csv_file_path)# .set(csv_file_path)
         d = pd.read_csv(self.getPath())
         self.setDataframe(d)
-        self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
+        print(pd.isnull(self.df).any(1).argmax()) # I AM HERE 
+        print()
+        # select the row num
+        self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
         
         if self.starting_row < len(self.df):
             comment = self.df.iloc[self.starting_row]['User Comment']
-            comment = comment.replace("___", "\n\n")
+            # replace the __ with new lines
+            comment = comment.replace("___", "\n\n") 
+            # add the new comment to the text box
             self.text_area.insert(INSERT, comment)  
-            self.progress['value'] = (self.starting_row / len(self.df)) * 100
+            # update the progress bar
+            self.progress['value'] = (self.starting_row / len(self.df)) * 100 
             self.update_idletasks()
         else:
             self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
@@ -223,7 +229,7 @@ def main():
     root = Tk()
     root.title("Cody")
     root.geometry('1250x700') # width x height
-    root.minsize("500", "550")
+    root.minsize("700", "650")
     app = Cody()
     root.mainloop()
 
