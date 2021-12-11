@@ -127,6 +127,14 @@ class Cody(Frame):
         # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax). 
         
         if self.starting_row < len(self.df):
+            # create a popup to set variables
+            win = Toplevel()
+            win.wm_title("Menu options")
+            l = Label(win, text="Do these codes look correct?")
+            l.grid(row=0, column=0)
+            b = Button(win, text="Okay", command=win.destroy)
+            b.grid(row=1, column=0)
+
             comment = self.df.iloc[self.starting_row]['User Comment']
             # replace the __ with new lines
             comment = comment.replace("___", "\n\n") 
