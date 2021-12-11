@@ -116,7 +116,10 @@ class Cody(Frame):
         # this code chunk will create a button to close the entire app
         #close_button = Button(app, text='Close',command=app.destroy)
         #close_button.grid(row=30, column=15)
-        
+    def nextPopup(self):
+        self.win.destroy()
+        return
+
     def import_csv_data(self):
         csv_file_path = askopenfilename() # open the file manager to select CSV
         self.setPath(csv_file_path)# .set(csv_file_path)
@@ -128,11 +131,13 @@ class Cody(Frame):
         
         if self.starting_row < len(self.df):
             # create a popup to set variables
-            win = Toplevel()
-            win.minsize("400", "330") # width x height
-            win.wm_title("Annotation scheme")
-            popup_start = Label(win, text="Identify your codes as either continuous or categorical. \n(Warning: Avoid importing more than 15 codes)")
-            popup_start.grid(row=0, column=0, columnspan = 3, pady=(15, 15), padx=(15,0))
+            self.win = Toplevel()
+            self.win.minsize("550", "450") # width x height
+            self.win.wm_title("Annotation scheme")
+            popup_start = Label(self.win, text="Identify your codes as either continuous or categorical.")
+            popup_start.grid(row=0, column=0, columnspan = 3, pady=(15, 2), padx=(15,0), sticky=W)
+            popup_warning_label = Label(self.win, text="(Warning: Avoid importing more than 15 codes)")
+            popup_warning_label.grid(row=1, column=0, columnspan = 3, pady=(2, 15), padx=(15,0), sticky=W)
 
             # get columns
             columns_from_df = d.columns
@@ -140,30 +145,54 @@ class Cody(Frame):
             # window options setup
             CATEGORY_OPTIONS= ["continuous", "categorical"]
             num_df_cols = len(columns_from_df) # number of columns to iterate over
-            pop_up_labels = [] # labels to create in the popup
+            # labels to create in the popup
+            pop_up_labels = [] 
+
+            # set up the dropdown configs
             dropdown_list = []
-            default_category_option = StringVar(self)
-            default_category_option.set("Variable type")
+            self.categories_selected = []
+            #self.category_selected = StringVar(self) can remove these two later
+            #self.category_selected.set("Variable type")
+            # set up the entry box list
+            self.setCategoriesEntry()
+            #scrollbars = [] # not needed for now
 
-            # loop to create columns in pop-up window
+            # loop to create empty optionmenu text holders
             for i in range(1, num_df_cols):
-                # for every column except the first one, create a label and a dropdown with the same values
-                pop_up_labels.append(Label(win, text=columns_from_df[i]))
-                dropdown_list.append(OptionMenu(win, default_category_option, *CATEGORY_OPTIONS)) # , command=lambda _: self.getFont()
-            
-            for i in range(len(pop_up_labels)): # loop over the index of the labels, do this to use this as the col index in grid()
-                # place the label onto the first row of the grid
-                #pop_up_labels[i].config(width=10)
-                pop_up_labels[i].grid(row=i+1, column=1, padx=10)
-                dropdown_list[i].config(width=10)
-                dropdown_list[i].grid(row=i+1, column=2, padx=10)
+                sr = StringVar(self)
+                sr.set("Variable type")
+                print(i, "first")
+                dropdown_popup = OptionMenu(self.win, sr, *CATEGORY_OPTIONS, command=lambda _: self.enableCategoryEntry(i-1))
+                print(i, "second")
+                dropdown_popup.config(width=10)
+                dropdown_popup.grid(row=i+1, column=1, padx=10)
+                self.categories_selected.append(dropdown_popup)
 
-                # then create an Entry box if it is selected as categorical to enter the categories
+            # loop to create labels, optionmenus, and entries in pop-up window
+            for i in range(1, num_df_cols): # start at 1 to avoid selecting the text column
+                # for every column except the first one, create a label and a dropdown with the same values
+                pop_up_labels.append(Label(self.win, text=columns_from_df[i]))
+                #print(i)
+                ###dropdown_list.append(OptionMenu(win, self.categories_selected[i], *CATEGORY_OPTIONS, command=lambda _: self.enableCategoryEntry(i)))
+                self.categories_entries.append(Text(self.win, height = 3, width = 40, wrap="word"))
+                ## these two lines below were the add scrollbars, but are unnecessary
+                #scrollbars.append(Scrollbar(win, orient = 'vertical', command = categories_entries[i].yview))
+                #categories_entries[i]['yscrollcommand'] = scrollbars[i].set
             
-            #popup_cols = Label(win, text=col_string)
-            #popup_cols.grid(row=1, column=0)
-            b = Button(win, text="Done", command=win.destroy)
-            b.grid(row=len(pop_up_labels)+1, column=3, pady=(15, 5), padx=(0, 15), sticky=W)
+            # loop to add the labels, optionmenus, and entries to the grid
+            for i in range(len(pop_up_labels)): # loop over the index of the labels, do this to use this as the col index in grid()
+                # first, place the label
+                pop_up_labels[i].grid(row=i+2, column=0, padx=(15, 10))
+                # now add the dropdown next to each label
+                ###dropdown_list[i].config(width=10)
+                ###dropdown_list[i].grid(row=i+2, column=1, padx=10)
+                # now add the entry boxes
+                self.categories_entries[i].grid(row=i+2, column=2, padx=(10, 15))
+                # now disable the widget:
+                self.categories_entries[i].config(state=DISABLED)
+            
+            b = Button(self.win, text="Done", command=self.nextPopup)
+            b.grid(row=len(pop_up_labels)+2, column=2, pady=(15, 5), padx=(0, 15), sticky=W)
 
             ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']
@@ -237,6 +266,22 @@ class Cody(Frame):
         print(filename)
         self.df.to_csv(filename)
         #self.df.to_csv(r'updated.csv', index = False)
+
+    def enableCategoryEntry(self, index):
+        #selection = self.categories_selected
+        print('third')
+        print(index)
+        selection = self.categories_selected[index].get()
+        print(selection)
+        if selection=="categorical":
+            print("INDEX:")
+            self.categories_entries[index].config(state=NORMAL) 
+        return
+
+    
+    
+    def setCategoriesEntry(self):
+        self.categories_entries = []
         
     def getFont(self):
         font_size = self.font_var.get()
