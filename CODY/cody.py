@@ -129,12 +129,20 @@ class Cody(Frame):
         if self.starting_row < len(self.df):
             # create a popup to set variables
             win = Toplevel()
-            win.wm_title("Menu options")
-            l = Label(win, text="Do these codes look correct?")
-            l.grid(row=0, column=0)
+            win.wm_title("Annotation scheme")
+            popup_start = Label(win, text="Do these codes look correct?")
+            popup_start.grid(row=0, column=0)
+            # get columns
+            columns_from_df = d.columns
+            col_string = ""
+            for c in columns_from_df:
+                col_string += str(c) + "\n"
+            popup_cols = Label(win, text=col_string)
+            popup_cols.grid(row=1, column=0)
             b = Button(win, text="Okay", command=win.destroy)
-            b.grid(row=1, column=0)
+            b.grid(row=2, column=0)
 
+            ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']
             # replace the __ with new lines
             comment = comment.replace("___", "\n\n") 
