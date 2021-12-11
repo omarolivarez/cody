@@ -118,10 +118,10 @@ class Cody(Frame):
         #close_button.grid(row=30, column=15)
     
     def nextPopup(self):
-        print(list(map(lambda x: x.get(), self.a)))
-        """
-        for q in self.categories_selected:
-            print(q.get())"""
+        selected = (list(map(lambda x: x.get(), self.a)))
+        print(selected)
+        true_false_list = [x=="categorical" for x in selected]
+        print(true_false_list)
         self.win.destroy()
         return
 
@@ -162,11 +162,11 @@ class Cody(Frame):
             self.setCategoriesEntry()
             #scrollbars = [] # not needed for now
 
-            cats_list = columns_from_df[1:]
-            self.a = [StringVar(self.win) for i in range(len(cats_list))]
+            self.cats_list = columns_from_df[1:]
+            self.a = [StringVar(self.win) for i in range(len(self.cats_list))]
             n = 0
-            for n in range(len(cats_list)): 
-                l = Label(self.win, text=cats_list[n]).grid(row= n+2, column=1, padx=(15, 0), pady=(0, 5), sticky=E)
+            for n in range(len(self.cats_list)): 
+                l = Label(self.win, text=self.cats_list[n]).grid(row= n+2, column=1, padx=(15, 0), pady=(0, 5), sticky=E)
                 #Strg_var = StringVar(self.win) # maybe not needed
                 self.a[n].set("Variable type")
                 o = OptionMenu(self.win, self.a[n], *CATEGORY_OPTIONS)
@@ -209,7 +209,7 @@ class Cody(Frame):
                 ###self.categories_entries[i].config(state=DISABLED)
             """
             b = Button(self.win, text="Done", command=self.nextPopup)
-            b.grid(row=len(cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
+            b.grid(row=len(self.cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
 
             ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']
