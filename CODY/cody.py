@@ -129,18 +129,40 @@ class Cody(Frame):
         if self.starting_row < len(self.df):
             # create a popup to set variables
             win = Toplevel()
+            win.minsize("400", "330") # width x height
             win.wm_title("Annotation scheme")
-            popup_start = Label(win, text="Do these codes look correct?")
-            popup_start.grid(row=0, column=0)
+            popup_start = Label(win, text="Do these codes look correct? \n(Warning: Avoid importing more than 15 codes)")
+            popup_start.grid(row=0, column=0, columnspan = 3, pady=(15, 15), padx=(15,0))
+
             # get columns
             columns_from_df = d.columns
-            col_string = ""
-            for c in columns_from_df:
-                col_string += str(c) + "\n"
-            popup_cols = Label(win, text=col_string)
-            popup_cols.grid(row=1, column=0)
-            b = Button(win, text="Okay", command=win.destroy)
-            b.grid(row=2, column=0)
+
+            # window options setup
+            CATEGORY_OPTIONS= ["continuous", "categorical"]
+            num_df_cols = len(columns_from_df) # number of columns to iterate over
+            pop_up_labels = [] # labels to create in the popup
+            dropdown_list = []
+
+            # loop to create columns in pop-up window
+            for i in range(1, num_df_cols):
+                # for every column except the first one, create a label and a dropdown with the same values
+                pop_up_labels.append(Label(win, text=columns_from_df[i]))
+                dropdown_list.append(OptionMenu(win, "Variable type", *CATEGORY_OPTIONS)) # , command=lambda _: self.getFont()
+            
+            for i in range(len(pop_up_labels)): # loop over the index of the labels, do this to use this as the col index in grid()
+                # place the label onto the first row of the grid
+                #pop_up_labels[i].config(width=10)
+                pop_up_labels[i].grid(row=i+1, column=1, padx=10)
+                dropdown_list[i].config(width=200)
+                dropdown_list[i].grid(row=i+1, column=2, padx=10)
+
+                # then create an Entry box if it is selected as categorical to enter the categories
+                #dropdown = OptionMenu(win, "Variable type", *CATEGORY_OPTIONS) # probably no longer needed
+            
+            #popup_cols = Label(win, text=col_string)
+            #popup_cols.grid(row=1, column=0)
+            b = Button(win, text="Done", command=win.destroy)
+            b.grid(row=len(pop_up_labels)+1, column=3, pady=(15, 5), padx=(0, 15), sticky=W)
 
             ## update the text box with the last not-coded row
             comment = self.df.iloc[self.starting_row]['User Comment']

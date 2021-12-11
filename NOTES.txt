@@ -1,7 +1,12 @@
 Backlog of work:
+1. ask the user if they want drop downs or prefer to type it in
 3. figure out update the old csv, or how to get permission to overwrite old folder/file
 4. Make the entry labels bigger
 5. Apply some kind of styling
+6. add ML so that after 500 coded entries the app can predict and initialize the values for future rows. 
+7. Allow the user to override the predictions
+8. allow the ML model to update if the clusters change
+
 
 Installation script:
 pyinstaller --onefile --icon=cody_icon.ico cody.py
