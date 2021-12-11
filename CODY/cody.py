@@ -131,7 +131,7 @@ class Cody(Frame):
             win = Toplevel()
             win.minsize("400", "330") # width x height
             win.wm_title("Annotation scheme")
-            popup_start = Label(win, text="Do these codes look correct? \n(Warning: Avoid importing more than 15 codes)")
+            popup_start = Label(win, text="Identify your codes as either continuous or categorical. \n(Warning: Avoid importing more than 15 codes)")
             popup_start.grid(row=0, column=0, columnspan = 3, pady=(15, 15), padx=(15,0))
 
             # get columns
@@ -142,22 +142,23 @@ class Cody(Frame):
             num_df_cols = len(columns_from_df) # number of columns to iterate over
             pop_up_labels = [] # labels to create in the popup
             dropdown_list = []
+            default_category_option = StringVar(self)
+            default_category_option.set("Variable type")
 
             # loop to create columns in pop-up window
             for i in range(1, num_df_cols):
                 # for every column except the first one, create a label and a dropdown with the same values
                 pop_up_labels.append(Label(win, text=columns_from_df[i]))
-                dropdown_list.append(OptionMenu(win, "Variable type", *CATEGORY_OPTIONS)) # , command=lambda _: self.getFont()
+                dropdown_list.append(OptionMenu(win, default_category_option, *CATEGORY_OPTIONS)) # , command=lambda _: self.getFont()
             
             for i in range(len(pop_up_labels)): # loop over the index of the labels, do this to use this as the col index in grid()
                 # place the label onto the first row of the grid
                 #pop_up_labels[i].config(width=10)
                 pop_up_labels[i].grid(row=i+1, column=1, padx=10)
-                dropdown_list[i].config(width=200)
+                dropdown_list[i].config(width=10)
                 dropdown_list[i].grid(row=i+1, column=2, padx=10)
 
                 # then create an Entry box if it is selected as categorical to enter the categories
-                #dropdown = OptionMenu(win, "Variable type", *CATEGORY_OPTIONS) # probably no longer needed
             
             #popup_cols = Label(win, text=col_string)
             #popup_cols.grid(row=1, column=0)
