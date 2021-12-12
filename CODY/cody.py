@@ -118,10 +118,14 @@ class Cody(Frame):
         #close_button = Button(app, text='Close',command=app.destroy)
         #close_button.grid(row=30, column=15)
     
+    """nextPopup() is used to configure the categories for each code that was identified as a categorical variable
+       once this step is complete, the user will be taken to the main screen to do their coding"""
     def nextPopup(self):
+        # get the OptionMenu selection for each OptionMenu from popup window #1
         selected = (list(map(lambda x: x.get(), self.a)))
+        # create a new list where each index where there was a "categorical" in "selected" is TRUE, else FALSE
         true_false_list = [x=="categorical" for x in selected]
-        # now get just the ones that are true
+        # now get just the ones in "selected" that are true
         categorical_vars = list(compress(self.cats_list, true_false_list))
 
         # destroy the old window
@@ -129,17 +133,27 @@ class Cody(Frame):
 
         # create new window
         win2 = Toplevel()
-        win2.minsize("450", "550") # width x height
+        win2.minsize("550", "550") # width x height
         win2.wm_title("Categories")
 
         # add the categorical variables to the window
         n = 0
-        popup2_start = Label(win2, text="Add your categories for each code. Separate each category with a semicolon and a space.\nEach category may include any character, including spaces and hyphens.")
-        popup2_start.grid(row=0, column=0, columnspan = 3, pady=(15, 15), padx=(15,0), sticky=W)
+        # add the two labels at the top of the window
+        popup2_start = Label(win2, text="Add your categories for each code. Separate each category with a semicolon and a space.")
+        popup2_start.grid(row=0, column=0, columnspan = 3, pady=(15, 2), padx=(15,15), sticky=W)
+        popup2_start2 = Label(win2, text="Each category may include any character, including spaces and hyphens.")
+        popup2_start2.grid(row=1, column=0, columnspan = 3, pady=(0, 5), padx=(15,15), sticky=W)
+        popup2_start3 = Label(win2, text="Example: North America; South America; Africa;")
+        popup2_start3.grid(row=2, column=0, columnspan = 3, pady=(0, 15), padx=(15,15), sticky=W)
 
         for n in range(len(categorical_vars)): 
-                l = Label(win2, text=categorical_vars[n]).grid(row= n+1, column=0, padx=(15, 0), pady=(0, 5), sticky=E)
-        return
+                # add 3 to row because the first 3 rows are taken up by the three labels above
+                l = Label(win2, text=categorical_vars[n]).grid(row= n+3, column=0, padx=(15, 0), pady=(0, 5), sticky=E) 
+                te = Text(win2, height = 4, width = 50, wrap="word").grid(row=n+3, column=1, padx=(5, 15), pady=(0, 5))
+        
+        # create next button that takes you to main screen
+        button_popup2 = Button(win2, text="Finish") #, command=self.
+        button_popup2.grid(row=len(categorical_vars)+3, column=2, pady=(15, 10), padx=(0, 15), sticky=E)
 
     def import_csv_data(self):
         csv_file_path = askopenfilename() # open the file manager to select CSV
@@ -224,7 +238,7 @@ class Cody(Frame):
                 # now disable the widget:
                 ###self.categories_entries[i].config(state=DISABLED)
             """
-            b = Button(self.win, text="Done", command=self.nextPopup)
+            b = Button(self.win, text="Next", command=self.nextPopup)
             b.grid(row=len(self.cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
 
             ## update the text box with the last not-coded row
