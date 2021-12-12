@@ -21,7 +21,7 @@ class Cody(Frame):
         
     def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
-        self.pack(fill=BOTH, expand=True)
+        #self.pack(fill=BOTH, expand=True) # see if I can add this back later
         self.rowconfigure(5, pad=7)
         self.rowconfigure(17, weight=1)
         self.columnconfigure(3, weight=1)
@@ -128,31 +128,53 @@ class Cody(Frame):
         # now get just the ones in "selected" that are true
         categorical_vars = list(compress(self.cats_list, true_false_list))
 
+        # create a dictionary
+        self.codes_dict = {}
+
+        order = 0
+        # add codes to it as keys
+        for code in self.cats_list:
+            self.codes_dict[code] = []
+            if code in categorical_vars:
+                self.codes_dict[code].append(order)
+                order += 1
+            else:
+                self.codes_dict[code].append(-1) # pick a value below 0 arbitrarily
+
         # destroy the old window
         self.win.destroy()
 
         # create new window
-        win2 = Toplevel()
-        win2.minsize("550", "550") # width x height
-        win2.wm_title("Categories")
+        self.win2 = Toplevel()
+        self.win2.minsize("550", "550") # width x height
+        self.win2.wm_title("Categories")
 
         # add the categorical variables to the window
         n = 0
         # add the two labels at the top of the window
-        popup2_start = Label(win2, text="Add your categories for each code. Separate each category with a semicolon and a space.")
+        popup2_start = Label(self.win2, text="Add your categories for each code. Separate each category with a semicolon and a space.")
         popup2_start.grid(row=0, column=0, columnspan = 3, pady=(15, 2), padx=(15,15), sticky=W)
-        popup2_start2 = Label(win2, text="Each category may include any character, including spaces and hyphens.")
+        popup2_start2 = Label(self.win2, text="Each category may include any character, including spaces and hyphens.")
         popup2_start2.grid(row=1, column=0, columnspan = 3, pady=(0, 5), padx=(15,15), sticky=W)
-        popup2_start3 = Label(win2, text="Example: North America; South America; Africa;")
+        popup2_start3 = Label(self.win2, text="Example: North America; South America; Africa;")
         popup2_start3.grid(row=2, column=0, columnspan = 3, pady=(0, 15), padx=(15,15), sticky=W)
 
+        #self.b = [StringVar(self.win) for i in range(len(self.cats_list))]
+        #self.b[n].set("Variable type")
         for n in range(len(categorical_vars)): 
                 # add 3 to row because the first 3 rows are taken up by the three labels above
-                l = Label(win2, text=categorical_vars[n]).grid(row= n+3, column=0, padx=(15, 0), pady=(0, 5), sticky=E) 
-                te = Text(win2, height = 4, width = 50, wrap="word").grid(row=n+3, column=1, padx=(5, 15), pady=(0, 5))
-        
+                l = Label(self.win2, text=categorical_vars[n]).grid(row= n+3, column=0, padx=(15, 0), pady=(0, 5), sticky=E) 
+                te = Text(self.win2, height = 4, width = 50, wrap="word")
+                te.grid(row=n+3, column=1, padx=(5, 15), pady=(0, 5))
+
+                # add Text to dictionary and refernce it's text later
+                self.codes_dict[categorical_vars[n]].append(te)
+
+        # get the text from the entries
+        #selected = (list(map(lambda x: x.get(), self.a)))
+
         # create next button that takes you to main screen
-        button_popup2 = Button(win2, text="Finish") #, command=self.
+        button_popup2 = Button(self.win2, text="Finish", command=self.addCodes) #
         button_popup2.grid(row=len(categorical_vars)+3, column=2, pady=(15, 10), padx=(0, 15), sticky=E)
 
     def import_csv_data(self):
@@ -203,41 +225,6 @@ class Cody(Frame):
                 o.config(width=10)
                 o.grid(row = n+2, column=2, padx=10)
 
-            """
-            # loop to create empty optionmenu text holders
-            for i in range(1, num_df_cols):
-                sr = StringVar(self)
-                sr.set("Variable type")
-                print(i, "first")
-                dropdown_popup = OptionMenu(self.win, sr, *CATEGORY_OPTIONS) #, command=lambda _: self.enableCategoryEntry(i-1)
-                print(i, "second")
-                dropdown_popup.config(width=10)
-                dropdown_popup.grid(row=i+1, column=1, padx=10)
-                self.categories_selected.append(dropdown_popup)
-            
-            # loop to create labels, optionmenus, and entries in pop-up window
-            for i in range(1, num_df_cols): # start at 1 to avoid selecting the text column
-                # for every column except the first one, create a label and a dropdown with the same values
-                pop_up_labels.append(Label(self.win, text=columns_from_df[i]))
-                #print(i)
-                ###dropdown_list.append(OptionMenu(win, self.categories_selected[i], *CATEGORY_OPTIONS, command=lambda _: self.enableCategoryEntry(i)))
-                ###self.categories_entries.append(Text(self.win, height = 3, width = 40, wrap="word"))
-                ## these two lines below were the add scrollbars, but are unnecessary
-                #scrollbars.append(Scrollbar(win, orient = 'vertical', command = categories_entries[i].yview))
-                #categories_entries[i]['yscrollcommand'] = scrollbars[i].set
-            
-            # loop to add the labels, optionmenus, and entries to the grid
-            for i in range(len(pop_up_labels)): # loop over the index of the labels, do this to use this as the col index in grid()
-                # first, place the label
-                pop_up_labels[i].grid(row=i+2, column=0, padx=(15, 10))
-                # now add the dropdown next to each label
-                ###dropdown_list[i].config(width=10)
-                ###dropdown_list[i].grid(row=i+2, column=1, padx=10)
-                # now add the entry boxes
-                ###self.categories_entries[i].grid(row=i+2, column=2, padx=(10, 15))
-                # now disable the widget:
-                ###self.categories_entries[i].config(state=DISABLED)
-            """
             b = Button(self.win, text="Next", command=self.nextPopup)
             b.grid(row=len(self.cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
 
@@ -314,18 +301,34 @@ class Cody(Frame):
         self.df.to_csv(filename)
         #self.df.to_csv(r'updated.csv', index = False)
 
-    def enableCategoryEntry(self, index):
-        #selection = self.categories_selected
-        print('third')
-        print(index)
-        selection = self.categories_selected[index].get()
-        print(selection)
-        if selection=="categorical":
-            print("INDEX:")
-            self.categories_entries[index].config(state=NORMAL) 
-        return
+    def addCodes(self):
+        for code in self.codes_dict.keys():
+            print(code)
+            if len(self.codes_dict[code]) > 1:
+                print(self.codes_dict[code][1].get("1.0",END))
+                va = self.codes_dict[code][1].get("1.0",END) # this extracts the text from the widget
+                va = va.strip()
+                va = va.strip(";")
+                va = va.split(";")
+                #va = va.remove("\\n")
+                print(va)
+                self.codes_dict[code][1] = va   
+            else:
+                self.codes_dict[code].append([])
+        #for code in self.codes_dict.keys():
+            #print(self.codes_dict[code][1])
+        
+        # destroy the second old window
+        self.win2.destroy()
 
-    
+        # now let's add these optionmenu to the main window
+        keys = list(self.codes_dict.keys())
+        for new_row in range(len(keys)): 
+            self.main_labels = Label(text=keys[new_row])
+            self.main_labels.grid(row= new_row+2, column=21, padx=(5, 15), pady=(0, 5), sticky=E)
+
+        # STOPPED HERE
+        return
     
     def setCategoriesEntry(self):
         self.categories_entries = []

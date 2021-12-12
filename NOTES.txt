@@ -1,4 +1,5 @@
 Backlog of work:
+URGENT: rather than having the category entry on the side in this first popup, instead have the user just select the variable type, click next, and on the next page have the user enter the category entries. HOWEVER, I need to see if the for-loop is causing all the optionmenus to have the same value. 
 1. ask the user if they want drop downs or prefer to type it in
 3. figure out update the old csv, or how to get permission to overwrite old folder/file
 4. Make the entry labels bigger
