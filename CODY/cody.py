@@ -274,7 +274,7 @@ class Cody(Frame):
     def next_row(self):
         selected_entries = (list(map(lambda x: x.get(), self.b)))
         # turn empty entries into True
-        true_false_entries = [x=="" for x in selected_entries]
+        true_false_entries = [x=="" or x=="Select option" for x in selected_entries]
         if True in true_false_entries:
             self.labeltext_empty.set("One of your entries\nwas left empty.")
             self.master.update()
@@ -379,12 +379,14 @@ class Cody(Frame):
                 SEL_OPTS = one_val[1]
                 # add in the starting, blank value
                 #SEL_OPTS.insert(0, "")
-                print("Printing new opts")
-                print(SEL_OPTS)
-                self.sel_var = StringVar(self)
-                self.sel_var.set("") # default value is blank #SEL_OPTS[0]
+                #print("Printing new opts")
+                #print(SEL_OPTS)
+                #self.sel_var = StringVar(self)
+                #self.sel_var.set("Select option") # default value is blank #SEL_OPTS[0]
+                this_string_var = self.b[new_row]
+                this_string_var.set("Select option")
                 ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS) 
-                ddown.config(width=13)
+                ddown.config(width=14)
                 ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
             else:
                 self.main_entries = Entry(self.win_main, textvariable=self.b[new_row])
