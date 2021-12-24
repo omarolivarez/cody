@@ -2,6 +2,7 @@ import tkinter
 from tkinter import *
 from tkinter import font
 #from tkFileDialog import *
+from tkinter import filedialog # to open dialog to save
 from tkinter.filedialog import askopenfilename
 import pandas as pd
 from tkinter.ttk import Frame, Button, Style, Progressbar
@@ -21,7 +22,6 @@ class Cody(Frame):
         self.path = ""
         self.starting_row = 0
         self.df = 0
-
         
     def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
@@ -155,6 +155,7 @@ class Cody(Frame):
         # create a dictionary
         self.codes_dict = {}
 
+        # potentially delete this block - not using order at the moment
         order = 0
         # add codes to it as keys
         for code in self.cats_list:
@@ -285,7 +286,19 @@ class Cody(Frame):
             print("Number of entries:", len(selected_entries))
             for ent in range(len(selected_entries)):
                 self.df.iat[self.starting_row, ent+1] = str(selected_entries[ent]) # set the value in the csv to this
+
+            # clear the values for each of the widgets
+            keys_list = list(self.codes_dict.keys())
+            for key in range(len(keys_list)): 
+                a_val = self.codes_dict[keys_list[key]]
+                if len(a_val[1]) > 0:
+                    this_string_var = self.b[key]
+                    this_string_var.set("Select option")
+                else:
+                    this_string_var = self.b[key]
+                    this_string_var.set("")
             
+            # clear the label with the warning message
             self.labeltext_empty.set("")
             self.master.update()
             
@@ -333,16 +346,13 @@ class Cody(Frame):
                 self.codes_dict[code][1] = va   
             else:
                 self.codes_dict[code].append([])
-        #for code in self.codes_dict.keys():
-            #print(self.codes_dict[code][1])
         
         # destroy the second old window
         self.win2.destroy()
 
         # now let's add these optionmenu to the main window
         keys = list(self.codes_dict.keys())
-        self.updateMain(keys)
-        
+        self.updateMain(keys) # pass the list of keys into the next function: updateMenu
 
     def updateMain(self, keys):
         # destroy the old window
@@ -354,19 +364,8 @@ class Cody(Frame):
         self.win_main.minsize("700", "650") # width x height
         self.win_main.wm_title("Cody")
 
-        # DELETE STARTING HERE
-        # count number of continuous vars
-        continuous_count = 0
-        for i in keys:
-            if len(self.codes_dict[i][1]) < 1:
-                continuous_count += 1
-        new_continuous_count = 0 # use as threshold for within the for-loop below
-        # DELETE ENDING HERE
-
         # create a list of StringVars for only the continuous variables
-        print("BEFORE")
         self.b = [StringVar(self.win_main) for i in range(len(keys))]
-        print("AFTER")
 
         for new_row in range(len(keys)): 
             self.main_labels = Label(self.win_main, text=keys[new_row])
@@ -377,12 +376,6 @@ class Cody(Frame):
 
             if len(one_val[1]) > 0:
                 SEL_OPTS = one_val[1]
-                # add in the starting, blank value
-                #SEL_OPTS.insert(0, "")
-                #print("Printing new opts")
-                #print(SEL_OPTS)
-                #self.sel_var = StringVar(self)
-                #self.sel_var.set("Select option") # default value is blank #SEL_OPTS[0]
                 this_string_var = self.b[new_row]
                 this_string_var.set("Select option")
                 ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS) 
@@ -391,7 +384,7 @@ class Cody(Frame):
             else:
                 self.main_entries = Entry(self.win_main, textvariable=self.b[new_row])
                 self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W, pady=(5, 10))
-                new_continuous_count += 1
+                #new_continuous_count += 1
 
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         #self.pack(fill=BOTH, expand=True) # see if I can add this back later
