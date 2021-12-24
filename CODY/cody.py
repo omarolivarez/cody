@@ -245,17 +245,17 @@ class Cody(Frame):
             b.grid(row=len(self.cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
 
             ## update the text box with the last not-coded row
-            comment = self.df.iloc[self.starting_row]['User Comment']
-            # replace the __ with new lines
-            comment = comment.replace("___", "\n\n") 
-            # add the new comment to the text box
-            self.text_area.insert(INSERT, comment)  
-            # update the progress bar
-            self.progress['value'] = (self.starting_row / len(self.df)) * 100 
-            self.update_idletasks()
-        else:
-            # in this case, the CSV is completed filled out
-            self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
+            #comment = self.df.iloc[self.starting_row]['User Comment']
+            ## replace the __ with new lines
+            #comment = comment.replace("___", "\n\n") 
+            ## add the new comment to the text box
+            #self.text_area.insert(INSERT, comment)  
+            ## update the progress bar
+            #self.progress['value'] = (self.starting_row / len(self.df)) * 100 
+            #self.update_idletasks()
+        #else:
+        #    # in this case, the CSV is completed filled out
+        #    self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         
     def next_row(self):
         if len(self.s.get())==0 or len(self.race.get())==0 or len(self.age.get())==0 or len(self.region.get())==0 or len(self.blm.get())==0 or len(self.viewpoint.get())==0 or len(self.style.get())==0:
@@ -384,15 +384,6 @@ class Cody(Frame):
         filemenu.add_separator()
         filemenu.add_command(label="Save", command=self.save)
         menubar.add_cascade(label="File", menu=filemenu)
-
-        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
-        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
-        #save_btn = Button(self, text="Save file", command = self.save, width=18)
-        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
-        
-        # font size selection widget
-        #font_l = Label(self, text = "Font")
-        #font_l.grid(row = 1, column = 20, padx = 1,sticky=E)
         
         FONT_OPTS= ["Font Size","11", "12", "13", "14", "16", "18"]
         self.font_var = StringVar(self)
@@ -414,12 +405,27 @@ class Cody(Frame):
         self.labeltext_empty.set("")
         self.empty_message = Label(self.win_main, justify=LEFT, textvariable=self.labeltext_empty)
         self.empty_message.config(fg="Red")
-        self.empty_message.grid(row = 10, column = 20, 
-                                padx = (2, 15), pady = (15, 0),sticky=W)
-        #self.empty_message = Label(self, text = "",)
+        self.empty_message.grid(row = 10, column = 20, padx = (2, 15), pady = (15, 0),sticky=W)
 
         self.progress = Progressbar(self.win_main, orient = HORIZONTAL, length = 100, mode = 'determinate')
         self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
+
+        if self.starting_row < len(self.df):
+            ## update the text box with the last not-coded row
+            comment = self.df.iloc[self.starting_row]['User Comment']
+
+            # replace the __ with new lines
+            comment = comment.replace("___", "\n\n") 
+
+            # add the new comment to the text box
+            self.text_area.insert(INSERT, comment) 
+
+            # update the progress bar
+            self.progress['value'] = (self.starting_row / len(self.df)) * 100 
+            self.update_idletasks()
+        else:
+            # in this case, the CSV is completed filled out
+            self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         return
     
     def setCategoriesEntry(self):
