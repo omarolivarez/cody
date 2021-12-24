@@ -382,7 +382,7 @@ class Cody(Frame):
                 print(SEL_OPTS)
                 self.sel_var = StringVar(self)
                 self.sel_var.set(SEL_OPTS[0]) # default value is blank
-                ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS, command=lambda _: self.getFont()) # NOTE: UPDATE COMMAND TO A NEW ONE
+                ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS) 
                 ddown.config(width=13)
                 ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
             else:
