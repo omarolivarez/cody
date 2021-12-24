@@ -327,6 +327,7 @@ class Cody(Frame):
                 va = va.strip()
                 va = va.strip(";")
                 va = va.split(";")
+                va = [el.strip() for el in va] # remove whitespaces from each option item itself
                 #va = va.remove("\\n")
                 print(va)
                 self.codes_dict[code][1] = va   
@@ -412,7 +413,7 @@ class Cody(Frame):
         self.font_var = StringVar(self)
         self.font_var.set(FONT_OPTS[2]) # default value
         dropdown = OptionMenu(self.win_main, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
-        dropdown.grid(row = 1, column=20, sticky=E, padx=(2, 15), pady=(10, 20)) 
+        dropdown.grid(row = 1, column=20, sticky=W, padx=(2, 15), pady=(10, 20)) 
         
         self.myFont = font.Font(family="Times New Roman", size=13)
         self.text_area = scrolledtext.ScrolledText(self.win_main, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
@@ -420,7 +421,7 @@ class Cody(Frame):
         # FONT CONFIGURATIONS END
         
         #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
+        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=25, pady = 10, padx = 15, sticky=N+S+E+W)
         
         next_btn = Button(self.win_main, text="Next row", command=self.next_row, width=11)
         next_btn.grid(row=len(keys)+3, column=20, padx = (2, 15), sticky=E, pady=(15, 10))
@@ -429,10 +430,10 @@ class Cody(Frame):
         self.labeltext_empty.set("")
         self.empty_message = Label(self.win_main, justify=LEFT, textvariable=self.labeltext_empty)
         self.empty_message.config(fg="Red")
-        self.empty_message.grid(row = 10, column = 20, padx = (2, 15), pady = (15, 0),sticky=W)
+        self.empty_message.grid(row = len(keys)+4, column = 20, padx = (2, 15), pady = (15, 0),sticky=W)
 
         self.progress = Progressbar(self.win_main, orient = HORIZONTAL, length = 100, mode = 'determinate')
-        self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
+        self.progress.grid(row=26, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
 
         if self.starting_row < len(self.df):
             ## update the text box with the last not-coded row
