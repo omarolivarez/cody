@@ -207,6 +207,10 @@ class Cody(Frame):
         #root.iconify() # this hides the old window but keeps it around so the entire app doesn't close
         self.setPath(csv_file_path)# .set(csv_file_path)
         d = pd.read_csv(self.getPath()) # initialize the dataframe
+        # convert all columns to string
+        lst = list(d)
+        d[lst] = d[lst].astype(str)
+
         self.setDataframe(d)
         # select the row num
         self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
@@ -275,28 +279,12 @@ class Cody(Frame):
             self.labeltext_empty.set("One of your entries\nwas left empty.")
             self.master.update()
         else:
-            # setting sex
-            self.df.iat[self.starting_row,1] = int(self.s.get())
-            # setting race
-            self.df.iat[self.starting_row,2] = int(self.race.get())
-            # setting age
-            self.df.iat[self.starting_row,3] = int(self.age.get())
-            # setting region
-            self.df.iat[self.starting_row,4] = int(self.region.get())
-            # setting blm reference
-            self.df.iat[self.starting_row,5] = int(self.blm.get())
-            # setting viewpoint
-            self.df.iat[self.starting_row,6] = int(self.viewpoint.get())
-            # setting style
-            self.df.iat[self.starting_row,7] = int(self.style.get())
-            
-            self.s.delete(0, END)
-            self.race.delete(0, END)
-            self.age.delete(0, END)
-            self.region.delete(0, END)
-            self.blm.delete(0, END)
-            self.viewpoint.delete(0, END)
-            self.style.delete(0, END)
+            # values in the order that they appear
+            # get the colnames
+            print(selected_entries)
+            print("Number of entries:", len(selected_entries))
+            for ent in range(len(selected_entries)):
+                self.df.iat[self.starting_row, ent+1] = str(selected_entries[ent]) # set the value in the csv to this
             
             self.labeltext_empty.set("")
             self.master.update()
@@ -431,7 +419,7 @@ class Cody(Frame):
         self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
         
         next_btn = Button(self.win_main, text="Next row", command=self.next_row, width=11)
-        next_btn.grid(row=9, column=20, padx = (2, 15), sticky=E, pady=(15, 10))
+        next_btn.grid(row=len(keys)+3, column=20, padx = (2, 15), sticky=E, pady=(15, 10))
         
         self.labeltext_empty=StringVar()
         self.labeltext_empty.set("")
