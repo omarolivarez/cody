@@ -1,5 +1,6 @@
 Backlog of work:
-URGENT: rather than having the category entry on the side in this first popup, instead have the user just select the variable type, click next, and on the next page have the user enter the category entries. HOWEVER, I need to see if the for-loop is causing all the optionmenus to have the same value. 
+URGENT: see why my updates are completly overwriting old GUI.
+0. In the setup menu, allow a checkbox for "Enable Imputations?" and then "after ___ coded observations"
 1. ask the user if they want drop downs or prefer to type it in
 3. figure out update the old csv, or how to get permission to overwrite old folder/file
 4. Make the entry labels bigger
@@ -12,3 +13,11 @@ URGENT: rather than having the category entry on the side in this first popup, i
 Installation script:
 pyinstaller --onefile --icon=cody_icon.ico cody.py
 
+WHERE I LEFT OFF: 
+I got the last row of the csv to populate into the new window.
+Next, I need to convert the Old Cody window to a Starting window that just has one button: Select CSV.
+Remove the File options from this Starting window.
+Leave the option of Save CSV only for the Main Cody window. 
+Get the Next Row button to perform validation checks on both the OptionMenus as well as the new Entries. 
+See if I can destroy the old window after the Select CSV button is clicked. If I can't, then update entire window with what is currently
+in the Main Cody window.
