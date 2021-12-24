@@ -10,6 +10,10 @@ import os
 import datetime
 from itertools import compress # for converting true false list into shorter version
 
+# MAKING THIS A GLOBAL VARIABLE SO IT CAN BE ACCESSING IN import_csv()
+# Create window object
+root = Tk()
+
 class Cody(Frame):
     def __init__(self):
         super().__init__()
@@ -22,8 +26,13 @@ class Cody(Frame):
     def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         #self.pack(fill=BOTH, expand=True) # see if I can add this back later
+        self.rowconfigure(5, pad=7)
+        self.rowconfigure(17, weight=1)
+        self.columnconfigure(3, weight=1)
+        self.columnconfigure(3, pad=7)
         race_l = Label(self, text = "Race")
         race_l.grid(row = 3, column = 19, padx = 0, sticky=E, pady=(30, 0))
+
         menubar = Menu(self.master)
         self.master.config(menu=menubar)
         filemenu = Menu(menubar, tearoff=0)
@@ -195,6 +204,7 @@ class Cody(Frame):
 
     def import_csv_data(self):
         csv_file_path = askopenfilename() # open the file manager to select CSV
+        #root.iconify() # this hides the old window but keeps it around so the entire app doesn't close
         self.setPath(csv_file_path)# .set(csv_file_path)
         d = pd.read_csv(self.getPath()) # initialize the dataframe
         self.setDataframe(d)
@@ -258,7 +268,10 @@ class Cody(Frame):
         #    self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         
     def next_row(self):
-        if len(self.s.get())==0 or len(self.race.get())==0 or len(self.age.get())==0 or len(self.region.get())==0 or len(self.blm.get())==0 or len(self.viewpoint.get())==0 or len(self.style.get())==0:
+        selected_entries = (list(map(lambda x: x.get(), self.b)))
+        # turn empty entries into True
+        true_false_entries = [x=="" for x in selected_entries]
+        if True in true_false_entries:
             self.labeltext_empty.set("One of your entries\nwas left empty.")
             self.master.update()
         else:
@@ -352,6 +365,17 @@ class Cody(Frame):
         self.win_main.minsize("700", "650") # width x height
         self.win_main.wm_title("Cody")
 
+        # count number of continuous vars
+        continuous_count = 0
+        for i in keys:
+            if len(self.codes_dict[i][1]) < 1:
+                continuous_count += 1
+        new_continuous_count = 0 # use as threshold for within the for-loop below
+        # create a list of StringVars for only the continuous variables
+        print("BEFORE")
+        self.b = [StringVar(self.win_main) for i in range(continuous_count)]
+        print("AFTER")
+
         for new_row in range(len(keys)): 
             self.main_labels = Label(self.win_main, text=keys[new_row])
             self.main_labels.grid(row= new_row+2, column=19, padx=(5, 15), pady=(0, 5), sticky=E)
@@ -367,8 +391,9 @@ class Cody(Frame):
                 ddown.config(width=13)
                 ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
             else:
-                self.main_entries = Entry(self.win_main)
-                self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W)
+                self.main_entries = Entry(self.win_main, textvariable=self.b[new_continuous_count])
+                self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W, pady=(5, 10))
+                new_continuous_count += 1
 
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         #self.pack(fill=BOTH, expand=True) # see if I can add this back later
@@ -458,8 +483,7 @@ class Cody(Frame):
 
 def main():
     global v
-    # Create window object
-    root = Tk()
+    
     root.title("Old Cody")
     root.geometry('1250x700') # width x height
     root.minsize("700", "650")
