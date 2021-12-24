@@ -22,6 +22,21 @@ class Cody(Frame):
     def initUI(self):        
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         #self.pack(fill=BOTH, expand=True) # see if I can add this back later
+        race_l = Label(self, text = "Race")
+        race_l.grid(row = 3, column = 19, padx = 0, sticky=E, pady=(30, 0))
+        menubar = Menu(self.master)
+        self.master.config(menu=menubar)
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="Import csv", command=self.import_csv_data)
+        filemenu.add_separator()
+        filemenu.add_command(label="Save", command=self.save)
+        menubar.add_cascade(label="File", menu=filemenu)
+
+        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
+        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
+        #save_btn = Button(self, text="Save file", command = self.save, width=18)
+        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
+        """
         self.rowconfigure(5, pad=7)
         self.rowconfigure(17, weight=1)
         self.columnconfigure(3, weight=1)
@@ -116,7 +131,7 @@ class Cody(Frame):
         
         # this code chunk will create a button to close the entire app
         #close_button = Button(app, text='Close',command=app.destroy)
-        #close_button.grid(row=30, column=15)
+        #close_button.grid(row=30, column=15)"""
     
     """nextPopup() is used to configure the categories for each code that was identified as a categorical variable
        once this step is complete, the user will be taken to the main screen to do their coding"""
@@ -139,7 +154,8 @@ class Cody(Frame):
                 self.codes_dict[code].append(order)
                 order += 1
             else:
-                self.codes_dict[code].append(-1) # pick a value below 0 arbitrarily
+                self.codes_dict[code].append(order) # pick a value below 0 arbitrarily
+                order += 1
 
         # destroy the old window
         self.win.destroy()
@@ -323,11 +339,87 @@ class Cody(Frame):
 
         # now let's add these optionmenu to the main window
         keys = list(self.codes_dict.keys())
-        for new_row in range(len(keys)): 
-            self.main_labels = Label(text=keys[new_row])
-            self.main_labels.grid(row= new_row+2, column=21, padx=(5, 15), pady=(0, 5), sticky=E)
+        self.updateMain(keys)
+        
 
-        # STOPPED HERE
+    def updateMain(self, keys):
+        # destroy the old window
+        self.win2.destroy()
+
+        # create new window
+        self.win_main = Toplevel()
+        self.win_main.geometry("1250x700")
+        self.win_main.minsize("700", "650") # width x height
+        self.win_main.wm_title("Cody")
+
+        for new_row in range(len(keys)): 
+            self.main_labels = Label(self.win_main, text=keys[new_row])
+            self.main_labels.grid(row= new_row+2, column=19, padx=(5, 15), pady=(0, 5), sticky=E)
+            one_key = keys[new_row]
+            one_val = self.codes_dict[one_key]
+            print(one_val)
+
+            if len(one_val[1]) > 0:
+                SEL_OPTS = one_val[1]
+                self.sel_var = StringVar(self)
+                self.sel_var.set(SEL_OPTS[0]) # default value NOTE: UPDATE LATER
+                ddown = OptionMenu(self.win_main, self.sel_var, *SEL_OPTS, command=lambda _: self.getFont()) # NOTE: UPDATE COMMAND TO A NEW ONE
+                ddown.config(width=13)
+                ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
+            else:
+                self.main_entries = Entry(self.win_main)
+                self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W)
+
+        # this section sets which columns are the ones that move - weight is what will expand when expanded
+        #self.pack(fill=BOTH, expand=True) # see if I can add this back later
+        self.win_main.rowconfigure(5, pad=7)
+        self.win_main.rowconfigure(17, weight=1)
+        self.win_main.columnconfigure(3, weight=1)
+        self.win_main.columnconfigure(3, pad=7)
+        
+        menubar = Menu(self.master)
+        self.master.config(menu=menubar)
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="Import csv", command=self.import_csv_data)
+        filemenu.add_separator()
+        filemenu.add_command(label="Save", command=self.save)
+        menubar.add_cascade(label="File", menu=filemenu)
+
+        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
+        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
+        #save_btn = Button(self, text="Save file", command = self.save, width=18)
+        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
+        
+        # font size selection widget
+        #font_l = Label(self, text = "Font")
+        #font_l.grid(row = 1, column = 20, padx = 1,sticky=E)
+        
+        FONT_OPTS= ["Font Size","11", "12", "13", "14", "16", "18"]
+        self.font_var = StringVar(self)
+        self.font_var.set(FONT_OPTS[0]) # default value
+        dropdown = OptionMenu(self.win_main, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
+        dropdown.grid(row = 1, column=20, sticky=E, padx=(2, 15), pady=(10, 20)) 
+        
+        self.myFont = font.Font(family="Times New Roman", size=13)
+        self.text_area = scrolledtext.ScrolledText(self.win_main, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
+        # padx here is a internal buffer
+        
+        #text_area.insert(INSERT, "")
+        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
+        
+        next_btn = Button(self.win_main, text="Next row", command=self.next_row, width=11)
+        next_btn.grid(row=9, column=20, padx = (2, 15), sticky=E, pady=(15, 10))
+        
+        self.labeltext_empty=StringVar()
+        self.labeltext_empty.set("")
+        self.empty_message = Label(self.win_main, justify=LEFT, textvariable=self.labeltext_empty)
+        self.empty_message.config(fg="Red")
+        self.empty_message.grid(row = 10, column = 20, 
+                                padx = (2, 15), pady = (15, 0),sticky=W)
+        #self.empty_message = Label(self, text = "",)
+
+        self.progress = Progressbar(self.win_main, orient = HORIZONTAL, length = 100, mode = 'determinate')
+        self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
         return
     
     def setCategoriesEntry(self):
@@ -362,7 +454,7 @@ def main():
     global v
     # Create window object
     root = Tk()
-    root.title("Cody")
+    root.title("Old Cody")
     root.geometry('1250x700') # width x height
     root.minsize("700", "650")
     app = Cody()
