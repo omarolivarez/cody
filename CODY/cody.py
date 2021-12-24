@@ -405,15 +405,19 @@ class Cody(Frame):
         filemenu.add_command(label="Save", command=self.save)
         menubar.add_cascade(label="File", menu=filemenu)
         
-        FONT_OPTS= ["Font Size","11", "12", "13", "14", "16", "18"]
+        # FONT CONFIGURATIONS        
+        font_label = Label(self.win_main, text="Font size")
+        font_label.grid(row=1, column=19, pady=(10, 20), padx=(15,5), sticky=E)
+        FONT_OPTS= ["11", "12", "13", "14", "16", "18", "20"]
         self.font_var = StringVar(self)
-        self.font_var.set(FONT_OPTS[0]) # default value
+        self.font_var.set(FONT_OPTS[2]) # default value
         dropdown = OptionMenu(self.win_main, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
         dropdown.grid(row = 1, column=20, sticky=E, padx=(2, 15), pady=(10, 20)) 
         
         self.myFont = font.Font(family="Times New Roman", size=13)
         self.text_area = scrolledtext.ScrolledText(self.win_main, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
         # padx here is a internal buffer
+        # FONT CONFIGURATIONS END
         
         #text_area.insert(INSERT, "")
         self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
