@@ -21,3 +21,8 @@ Leave the option of Save CSV only for the Main Cody window.
 Get the Next Row button to perform validation checks on both the OptionMenus as well as the new Entries. 
 See if I can destroy the old window after the Select CSV button is clicked. If I can't, then update entire window with what is currently
 in the Main Cody window.
+
+NEW: find out why starting row is not the one that contains empty values
+Find out how to tab in Text widgets
+Find out why nan's are saving wherever there is no saved entry
+Find out why the first value of the next empty row automatically gets filled out
