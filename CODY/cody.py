@@ -378,11 +378,11 @@ class Cody(Frame):
             if len(one_val[1]) > 0:
                 SEL_OPTS = one_val[1]
                 # add in the starting, blank value
-                SEL_OPTS.insert(0, "")
+                #SEL_OPTS.insert(0, "")
                 print("Printing new opts")
                 print(SEL_OPTS)
                 self.sel_var = StringVar(self)
-                self.sel_var.set(SEL_OPTS[0]) # default value is blank
+                self.sel_var.set("") # default value is blank #SEL_OPTS[0]
                 ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS) 
                 ddown.config(width=13)
                 ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
