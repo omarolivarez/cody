@@ -365,15 +365,18 @@ class Cody(Frame):
         self.win_main.minsize("700", "650") # width x height
         self.win_main.wm_title("Cody")
 
+        # DELETE STARTING HERE
         # count number of continuous vars
         continuous_count = 0
         for i in keys:
             if len(self.codes_dict[i][1]) < 1:
                 continuous_count += 1
         new_continuous_count = 0 # use as threshold for within the for-loop below
+        # DELETE ENDING HERE
+
         # create a list of StringVars for only the continuous variables
         print("BEFORE")
-        self.b = [StringVar(self.win_main) for i in range(continuous_count)]
+        self.b = [StringVar(self.win_main) for i in range(len(keys))]
         print("AFTER")
 
         for new_row in range(len(keys)): 
@@ -385,13 +388,17 @@ class Cody(Frame):
 
             if len(one_val[1]) > 0:
                 SEL_OPTS = one_val[1]
+                # add in the starting, blank value
+                SEL_OPTS.insert(0, "")
+                print("Printing new opts")
+                print(SEL_OPTS)
                 self.sel_var = StringVar(self)
-                self.sel_var.set(SEL_OPTS[0]) # default value NOTE: UPDATE LATER
-                ddown = OptionMenu(self.win_main, self.sel_var, *SEL_OPTS, command=lambda _: self.getFont()) # NOTE: UPDATE COMMAND TO A NEW ONE
+                self.sel_var.set(SEL_OPTS[0]) # default value is blank
+                ddown = OptionMenu(self.win_main, self.b[new_row], *SEL_OPTS, command=lambda _: self.getFont()) # NOTE: UPDATE COMMAND TO A NEW ONE
                 ddown.config(width=13)
                 ddown.grid(row = new_row+2, column=20, sticky=W, padx=(5, 15), pady=(5, 10)) 
             else:
-                self.main_entries = Entry(self.win_main, textvariable=self.b[new_continuous_count])
+                self.main_entries = Entry(self.win_main, textvariable=self.b[new_row])
                 self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W, pady=(5, 10))
                 new_continuous_count += 1
 
