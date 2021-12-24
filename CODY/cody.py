@@ -141,6 +141,12 @@ class Cody(Frame):
         # this code chunk will create a button to close the entire app
         #close_button = Button(app, text='Close',command=app.destroy)
         #close_button.grid(row=30, column=15)"""
+
+    # to be able to tab across Coding options Text widgets
+    def focus_next_widget(self, event):
+        event.widget.tk_focusNext().focus()
+        return("break")
+
     
     """nextPopup() is used to configure the categories for each code that was identified as a categorical variable
        once this step is complete, the user will be taken to the main screen to do their coding"""
@@ -191,6 +197,7 @@ class Cody(Frame):
                 # add 3 to row because the first 3 rows are taken up by the three labels above
                 l = Label(self.win2, text=categorical_vars[n]).grid(row= n+3, column=0, padx=(15, 0), pady=(0, 5), sticky=E) 
                 te = Text(self.win2, height = 4, width = 50, wrap="word")
+                te.bind("<Tab>", self.focus_next_widget) # to connecting to Tab-ing function
                 te.grid(row=n+3, column=1, padx=(5, 15), pady=(0, 5))
 
                 # add Text to dictionary and refernce it's text later
@@ -207,6 +214,7 @@ class Cody(Frame):
         csv_file_path = askopenfilename() # open the file manager to select CSV
         #root.iconify() # this hides the old window but keeps it around so the entire app doesn't close
         self.setPath(csv_file_path)# .set(csv_file_path)
+        #with open('/home/rv/ncbi-blast-2.2.23+/db/output.blast') as f:
         d = pd.read_csv(self.getPath()) # initialize the dataframe
         # convert all columns to string
         lst = list(d)
@@ -215,7 +223,8 @@ class Cody(Frame):
         self.setDataframe(d)
         # select the row num
         self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
-        # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax). 
+        # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax).
+        # NOTE: this above isn't working 
         
         if self.starting_row < len(self.df):
             # create a popup to set variables
@@ -319,17 +328,23 @@ class Cody(Frame):
         
     def save(self):
         #save_path = self.getPath() + "/updated/"
-        dir_name = filedialog.askdirectory() #tkFileDialog.
+        #dir_name = filedialog.askdirectory() #tkFileDialog. OLD ONE
+        #csv_save_file_path = askopenfilename() # open the file manager to select CSV
+        #self.saving_path = csv_save_file_path
+
         new_folder = "Updated_Coding"
-        path = os.path.join(dir_name, new_folder)
-        mode = 0o666
-        os.mkdir(path, mode)
+        path = os.path.dirname(self.getPath())
+        path = os.path.join(path, new_folder)
+        print(path)
+        if not os.path.exists(path): # check if this path already exists
+            mode = 0o777
+            os.makedirs(path, mode) # if not, create it
+
         today = datetime.date.today().strftime("%Y%m%d")
-        filename = "%s_%s.%s" % ("Updated_Coding", today ,"csv")
+        filename = "%s_%s_%s" % ("Updated_Coding", str(today), str(os.path.basename(self.getPath())))
         filename = os.path.join(path,filename)
         print(filename)
-        self.df.to_csv(filename)
-        #self.df.to_csv(r'updated.csv', index = False)
+        self.df.to_csv(path_or_buf=filename, index=False)
 
     def addCodes(self):
         for code in self.codes_dict.keys():
