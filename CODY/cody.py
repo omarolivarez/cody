@@ -5,6 +5,7 @@ from tkinter import font
 from tkinter import filedialog # to open dialog to save
 from tkinter.filedialog import askopenfilename
 import pandas as pd
+import numpy as np
 from tkinter.ttk import Frame, Button, Style, Progressbar
 from tkinter import scrolledtext
 import os
@@ -212,19 +213,19 @@ class Cody(Frame):
 
     def import_csv_data(self):
         csv_file_path = askopenfilename() # open the file manager to select CSV
-        #root.iconify() # this hides the old window but keeps it around so the entire app doesn't close
         self.setPath(csv_file_path)# .set(csv_file_path)
-        #with open('/home/rv/ncbi-blast-2.2.23+/db/output.blast') as f:
         d = pd.read_csv(self.getPath()) # initialize the dataframe
         # convert all columns to string
         lst = list(d)
         d[lst] = d[lst].astype(str)
 
-        self.setDataframe(d)
+        d = d.replace('nan', np.NaN) # replace string nan's as numpy NaN's
+        self.setDataframe(d) # set the df in the Object
         # select the row num
-        self.setStartingRow(pd.isnull(self.df).any(1).argmax()) # self.setStartingRow(pd.isnull(self.df).any(1).nonzero()[0][0])
-        # what this line above does: create a series that sets non-null rows to False and null rows to true. Find the first one (argmax).
-        # NOTE: this above isn't working 
+        nu_df = self.getDataframe().isnull().any(axis=1) # this creates a Series that has a True if any cell in the row has an empty value
+        converted_to_df = nu_df.to_frame(name="truefalse")
+        index_of_first_empty_val = converted_to_df[converted_to_df.truefalse == True].index[0] # get the index of the first row with True
+        self.setStartingRow(index_of_first_empty_val) # set the starting row
         
         if self.starting_row < len(self.df):
             # create a popup to set variables
