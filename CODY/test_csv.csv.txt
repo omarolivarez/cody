@@ -1,8 +1,0 @@
-User Comment,Sex,Race,Age,Region of Origin,BLM Reference,Viewpoint,Language Style
-john, 1, 1, 1, 1, 1, 2, 3
-jane, 1, 1, 1, 1, 1, 3, 3
-jack, 1, 1, 1, 1, 1, 2, 2
-joe,,,,,,,
-janelly,,,,,,,
-joseph,,,,,,,
-jill,,,,,,,

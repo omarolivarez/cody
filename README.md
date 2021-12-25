@@ -1,7 +1,7 @@
 # cody
 A desktop app for coding (labeling) data. Cody is made from a Python backend, tkinter front-end, and pandas for data management.  
 *Screenshot of Cody*
-![Cody screenshot](https://github.com/omarolivarez/cody/blob/dev/CODY/images/Cody_example.png)
+![Cody screenshot](https://github.com/omarolivarez/cody/images/Cody_example.png)
 
 
 ## Problem it solves

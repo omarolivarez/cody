@@ -11,18 +11,20 @@ URGENT: see why my updates are completly overwriting old GUI.
 
 
 Installation script:
-pyinstaller --onefile --icon=cody_icon.ico cody.py
+pyinstaller --onefile --windowed --hidden-import cmath --icon=cody_icon.ico cody.py --name Cody  --noconsole
 
 WHERE I LEFT OFF: 
 I got the last row of the csv to populate into the new window.
 Next, I need to convert the Old Cody window to a Starting window that just has one button: Select CSV.
 Remove the File options from this Starting window.
 Leave the option of Save CSV only for the Main Cody window. 
-Get the Next Row button to perform validation checks on both the OptionMenus as well as the new Entries. 
 See if I can destroy the old window after the Select CSV button is clicked. If I can't, then update entire window with what is currently
 in the Main Cody window.
 
-NEW: find out why starting row is not the one that contains empty values
-Find out how to tab in Text widgets
+NEW:
 Find out why nan's are saving wherever there is no saved entry
 Find out why the first value of the next empty row automatically gets filled out
+
+Last issue I ran into: 
+Brings up terminal window even after noconsole flag
+After I click on the executable. When I click on the application, nothing gets returned. 
