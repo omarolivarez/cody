@@ -1,13 +1,11 @@
 import tkinter
 from tkinter import *
 from tkinter import font
-#from tkFileDialog import *
+from tkinter.ttk import Frame, Button, Style, Progressbar
+from tkinter import scrolledtext
 from tkinter import filedialog # to open dialog to save
 from tkinter.filedialog import askopenfilename
 import pandas as pd
-import numpy as np
-from tkinter.ttk import Frame, Button, Style, Progressbar
-from tkinter import scrolledtext
 import os
 import datetime
 from itertools import compress # for converting true false list into shorter version
@@ -41,107 +39,6 @@ class Cody(Frame):
         filemenu.add_separator()
         filemenu.add_command(label="Save", command=self.save)
         menubar.add_cascade(label="File", menu=filemenu)
-
-        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
-        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
-        #save_btn = Button(self, text="Save file", command = self.save, width=18)
-        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
-        """
-        self.rowconfigure(5, pad=7)
-        self.rowconfigure(17, weight=1)
-        self.columnconfigure(3, weight=1)
-        self.columnconfigure(3, pad=7)
-        
-        menubar = Menu(self.master)
-        self.master.config(menu=menubar)
-        filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Import csv", command=self.import_csv_data)
-        filemenu.add_separator()
-        filemenu.add_command(label="Save", command=self.save)
-        menubar.add_cascade(label="File", menu=filemenu)
-
-        #select_btn = Button(self, text="Select CSV",command=self.import_csv_data, width=20)
-        #select_btn.grid(sticky=W, pady=8, padx=(14, 5), columnspan = 1, rowspan=1, column=0) 
-        #save_btn = Button(self, text="Save file", command = self.save, width=18)
-        #save_btn.grid(row=0, column=20, pady = 5, padx = 5)
-        
-        # font size selection widget
-        #font_l = Label(self, text = "Font")
-        #font_l.grid(row = 1, column = 20, padx = 1,sticky=E)
-        
-        FONT_OPTS= ["Font Size","11", "12", "13", "14", "16", "18"]
-        self.font_var = StringVar(self)
-        self.font_var.set(FONT_OPTS[0]) # default value
-        dropdown = OptionMenu(self, self.font_var, *FONT_OPTS, command=lambda _: self.getFont())
-        dropdown.grid(row = 1, column=20, sticky=E, padx=(2, 15)) 
-        
-        self.myFont = font.Font(family="Times New Roman", size=13)
-        self.text_area = scrolledtext.ScrolledText(self, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
-        # padx here is a internal buffer
-        
-        #text_area.insert(INSERT, "")
-        self.text_area.grid(row = 1, column = 0, columnspan=5, rowspan=18, pady = 10, padx = 15, sticky=N+S+E+W)
-        
-        # input fields
-        sl = Label(self, text = "Sex")
-        sl.grid(row = 2, column = 19, padx = 0,sticky=E, pady=(70, 0)) 
-        self.s = Entry(self)
-        self.s.grid(row=2, column=20, padx = (2, 15), sticky=W, pady=(70, 0), columnspan=2)
-        
-        race_l = Label(self, text = "Race")
-        race_l.grid(row = 3, column = 19, padx = 0, sticky=E, pady=(30, 0))
-        self.race = Entry(self)
-        self.race.grid(row=3, column=20, padx =  (2, 15), sticky=W, pady=(30, 0), columnspan=2)
-        
-        age_l = Label(self, text = "Age")
-        age_l.grid(row = 4, column = 19, padx = 0, sticky=E, pady=(30, 0))
-        self.age = Entry(self)
-        self.age.grid(row=4, column=20, padx =  (2, 15), sticky=W, pady=(30, 0), columnspan=2)
-        
-        region_l = Label(self, text = "Region of Origin")
-        region_l.grid(row = 5, column = 19, padx = 0, sticky=E, pady=(30, 0))
-        self.region = Entry(self)
-        self.region.grid(row=5, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
-        
-        blm_l = Label(self, text = "BLM Reference")
-        blm_l.grid(row = 6, column = 19, padx = 0, sticky=E, pady=(30, 0))
-        self.blm = Entry(self)
-        self.blm.grid(row=6, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
-        
-        viewpoint_l = Label(self, text = "Viewpoint")
-        viewpoint_l.grid(row = 7, column = 19, padx = 0, sticky=E, pady=(30, 0))
-        self.viewpoint = Entry(self)
-        self.viewpoint.grid(row=7, column=20, padx = (2, 15), sticky=W, pady=(30, 0), columnspan=2)
-        
-        style_l = Label(self, text = "Language Style")
-        style_l.grid(row = 8, column = 19, padx = 0, sticky=E, pady=(30, 20))
-        self.style = Entry(self)
-        self.style.grid(row=8, column=20, padx = (2, 15), sticky=W, pady=(30, 20), columnspan=2)
-        
-        next_btn = Button(self, text="Next row", command=self.next_row, width=11)
-        next_btn.grid(row=9, column=20, padx = (2, 15), sticky=E)
-        
-        self.labeltext_empty=StringVar()
-        self.labeltext_empty.set("")
-        self.empty_message = Label(self, justify=LEFT, textvariable=self.labeltext_empty)
-        self.empty_message.config(fg="Red")
-        self.empty_message.grid(row = 10, column = 20, 
-                                padx = (2, 15), pady = (15, 0),sticky=W)
-        #self.empty_message = Label(self, text = "",)
-
-        self.progress = Progressbar(self, orient = HORIZONTAL, length = 100, mode = 'determinate')
-        self.progress.grid(row=19, column = 0, columnspan=5, pady = 3, padx = 15, sticky=N+S+E+W)
-        
-        # Import button
-        #import_label = Label(self, text = "Import Data", font = ('bold', 14), pady = 20, padx = 20)
-        #import_label.grid(row = 30, column = 10)
-        
-        #import_button = Button(self, text='Select CSV file',command=self.import_csv_data)
-        #import_button.grid(row=30, column=11)
-        
-        # this code chunk will create a button to close the entire app
-        #close_button = Button(app, text='Close',command=app.destroy)
-        #close_button.grid(row=30, column=15)"""
 
     # to be able to tab across Coding options Text widgets
     def focus_next_widget(self, event):
@@ -219,7 +116,8 @@ class Cody(Frame):
         lst = list(d)
         d[lst] = d[lst].astype(str)
 
-        d = d.replace('nan', np.NaN) # replace string nan's as numpy NaN's
+        #d = d.replace('nan', np.NaN) # replace string nan's as numpy NaN's - this requires entire np library
+        d = d.replace({"nan": None}) # None will force NaNs to appear
         self.setDataframe(d) # set the df in the Object
         # select the row num
         nu_df = self.getDataframe().isnull().any(axis=1) # this creates a Series that has a True if any cell in the row has an empty value
@@ -249,8 +147,6 @@ class Cody(Frame):
             # set up the dropdown configs
             dropdown_list = []
             self.categories_selected = []
-            #self.category_selected = StringVar(self) can remove these two later
-            #self.category_selected.set("Variable type")
             # set up the entry box list
             self.setCategoriesEntry()
             #scrollbars = [] # not needed for now
@@ -268,19 +164,6 @@ class Cody(Frame):
 
             b = Button(self.win, text="Next", command=self.nextPopup)
             b.grid(row=len(self.cats_list)+2, column=2, pady=(15, 5), padx=(0, 15))
-
-            ## update the text box with the last not-coded row
-            #comment = self.df.iloc[self.starting_row]['User Comment']
-            ## replace the __ with new lines
-            #comment = comment.replace("___", "\n\n") 
-            ## add the new comment to the text box
-            #self.text_area.insert(INSERT, comment)  
-            ## update the progress bar
-            #self.progress['value'] = (self.starting_row / len(self.df)) * 100 
-            #self.update_idletasks()
-        #else:
-        #    # in this case, the CSV is completed filled out
-        #    self.text_area.insert(INSERT, "CONGRATULATIONS, YOU'RE DONE! \n THIS DATASET HAS BEEN FULLY CODED. ") 
         
     def next_row(self):
         selected_entries = (list(map(lambda x: x.get(), self.b)))
@@ -336,7 +219,6 @@ class Cody(Frame):
         new_folder = "Updated_Coding"
         path = os.path.dirname(self.getPath())
         path = os.path.join(path, new_folder)
-        print(path)
         if not os.path.exists(path): # check if this path already exists
             mode = 0o777
             os.makedirs(path, mode) # if not, create it
@@ -344,12 +226,10 @@ class Cody(Frame):
         today = datetime.date.today().strftime("%Y%m%d")
         filename = "%s_%s_%s" % ("Updated_Coding", str(today), str(os.path.basename(self.getPath())))
         filename = os.path.join(path,filename)
-        print(filename)
         self.df.to_csv(path_or_buf=filename, index=False)
 
     def addCodes(self):
         for code in self.codes_dict.keys():
-            print(code)
             if len(self.codes_dict[code]) > 1:
                 print(self.codes_dict[code][1].get("1.0",END))
                 va = self.codes_dict[code][1].get("1.0",END) # this extracts the text from the widget
@@ -357,8 +237,6 @@ class Cody(Frame):
                 va = va.strip(";")
                 va = va.split(";")
                 va = [el.strip() for el in va] # remove whitespaces from each option item itself
-                #va = va.remove("\\n")
-                print(va)
                 self.codes_dict[code][1] = va   
             else:
                 self.codes_dict[code].append([])
@@ -388,7 +266,6 @@ class Cody(Frame):
             self.main_labels.grid(row= new_row+2, column=19, padx=(5, 15), pady=(0, 5), sticky=E)
             one_key = keys[new_row]
             one_val = self.codes_dict[one_key]
-            print(one_val)
 
             if len(one_val[1]) > 0:
                 SEL_OPTS = one_val[1]
@@ -400,7 +277,6 @@ class Cody(Frame):
             else:
                 self.main_entries = Entry(self.win_main, textvariable=self.b[new_row])
                 self.main_entries.grid(row= new_row+2, column=20, padx = (5, 15), sticky=W, pady=(5, 10))
-                #new_continuous_count += 1
 
         # this section sets which columns are the ones that move - weight is what will expand when expanded
         #self.pack(fill=BOTH, expand=True) # see if I can add this back later
@@ -428,7 +304,6 @@ class Cody(Frame):
         
         self.myFont = font.Font(family="Times New Roman", size=13)
         self.text_area = scrolledtext.ScrolledText(self.win_main, wrap = tkinter.WORD, width = 40, padx = 2, height = 10, font = self.myFont)
-        # padx here is a internal buffer
         # FONT CONFIGURATIONS END
         
         #text_area.insert(INSERT, "")
