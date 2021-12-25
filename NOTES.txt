@@ -1,8 +1,30 @@
 Backlog of work:
+URGENT: see why my updates are completly overwriting old GUI.
+0. In the setup menu, allow a checkbox for "Enable Imputations?" and then "after ___ coded observations"
+1. ask the user if they want drop downs or prefer to type it in
 3. figure out update the old csv, or how to get permission to overwrite old folder/file
 4. Make the entry labels bigger
 5. Apply some kind of styling
+6. add ML so that after 500 coded entries the app can predict and initialize the values for future rows. 
+7. Allow the user to override the predictions
+8. allow the ML model to update if the clusters change
+
 
 Installation script:
-pyinstaller --onefile --icon=cody_icon.ico cody.py
+pyinstaller --onefile --windowed --hidden-import cmath --icon=cody_icon.ico cody.py --name Cody  --noconsole
 
+WHERE I LEFT OFF: 
+I got the last row of the csv to populate into the new window.
+Next, I need to convert the Old Cody window to a Starting window that just has one button: Select CSV.
+Remove the File options from this Starting window.
+Leave the option of Save CSV only for the Main Cody window. 
+See if I can destroy the old window after the Select CSV button is clicked. If I can't, then update entire window with what is currently
+in the Main Cody window.
+
+NEW:
+Find out why nan's are saving wherever there is no saved entry
+Find out why the first value of the next empty row automatically gets filled out
+
+Last issue I ran into: 
+Brings up terminal window even after noconsole flag
+After I click on the executable. When I click on the application, nothing gets returned. 
